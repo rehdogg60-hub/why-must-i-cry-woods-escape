@@ -33,6 +33,7 @@ Power-ups:
 - Shower Power clears nearby enemies with soap bubbles.
 - Cry Burst freezes enemies for 5 seconds.
 - Maximo Mode gives temporary invincibility.
+- Play Game https://rehdogg60-hub.github.io/why-must-i-cry-woods-escape/
 - Loofah Shield protects from one hit.
 
 ## Hosting
