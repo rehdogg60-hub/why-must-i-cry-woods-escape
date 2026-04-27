@@ -1,22 +1,40 @@
-# why-must-i-cry-woods-escape
-Why Must I Cry: Woods Escape is a retro-style browser game from Reh Dogg Games Plus.
+# Why Must I Cry: Woods Escape
 
-Inspired by the iconic "Why Must I Cry" music video, players run through the woods while avoiding enemies, collecting glowing tears, and surviving against the clock. The game works on desktop and mobile devices using simple controls and requires no downloads.
+A mobile-friendly browser maze game built with HTML, CSS, and vanilla JavaScript only.
 
-This project is part of the Reh Dogg Games Plus series, where games are created based on fan-favorite songs and short films.
+## Play
 
-Features:
+Open `index.html` in a browser.
 
-- Playable in any modern web browser
-- Keyboard and mobile touch controls
-- Fictional enemies and power-ups
-- Lives, score, and timer system
-- Optional background music
-- No external libraries required
-- Lightweight and mobile-friendly
+## Files
 
-Platform:
-HTML5 / JavaScript / CSS
+- `index.html`
+- `style.css`
+- `game.js`
+- `README.md`
+- Optional: `theme.mp3`
 
-Developer:
-Reh Dogg Games Plus
+## Audio
+
+Place a background music file named `theme.mp3` in this folder to enable the theme song. If `theme.mp3` is missing, the game still works normally. Browser rules require the player to press Start or Play before music can begin.
+
+## Gameplay
+
+Move Reh Dogg through the dark forest maze, collect every glowing tear, grab bonus music notes, and avoid five fictional enemies:
+
+- The Liar
+- The Thief
+- The Trouble Kid
+- The Heartbreaker
+- The Vanisher
+
+Power-ups:
+
+- Shower Power clears nearby enemies with soap bubbles.
+- Cry Burst freezes enemies for 5 seconds.
+- Maximo Mode gives temporary invincibility.
+- Loofah Shield protects from one hit.
+
+## Hosting
+
+Upload the folder to GitHub Pages, Netlify, or any static web host. No build step or external libraries are required.

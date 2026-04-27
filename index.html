@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Why Must I Cry: Woods Escape</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="game-shell" aria-live="polite">
+    <section class="screen start-screen is-active" data-screen="start">
+      <div class="forest-layer"></div>
+      <div class="hero-art" aria-hidden="true">
+        <span class="moon"></span>
+        <span class="singer"></span>
+        <span class="tear-big"></span>
+        <span class="note-big"></span>
+      </div>
+      <div class="screen-content">
+        <p class="eyebrow">Emotional Forest Arcade</p>
+        <h1>Why Must I Cry:<br>Woods Escape</h1>
+        <p class="tagline">Run the moonlit maze, collect glowing tears, dodge dramatic trouble, and sing your way out.</p>
+        <button class="primary-button" data-action="instructions">Start</button>
+      </div>
+    </section>
+
+    <section class="screen info-screen" data-screen="instructions">
+      <div class="forest-layer"></div>
+      <div class="screen-content info-content">
+        <p class="eyebrow">How to Play</p>
+        <h2>Collect every tear.</h2>
+        <div class="instruction-list">
+          <p><strong>Move:</strong> arrow keys on desktop, touch pad on mobile.</p>
+          <p><strong>Goal:</strong> collect glowing tears. Music notes add bonus points.</p>
+          <p><strong>Danger:</strong> enemies chase you. Three catches ends the run.</p>
+          <p><strong>Power-ups:</strong> soap clears nearby enemies, cry freezes them, Maximo makes you invincible, shield blocks one hit.</p>
+        </div>
+        <button class="primary-button" data-action="play">Enter the Woods</button>
+      </div>
+    </section>
+
+    <section class="screen game-screen" data-screen="game">
+      <div class="forest-layer"></div>
+      <header class="hud">
+        <div><span>Score</span><strong id="score">0</strong></div>
+        <div><span>Tears</span><strong id="tears">0</strong></div>
+        <div><span>Lives</span><strong id="lives">3</strong></div>
+      </header>
+      <button class="mute-button" id="muteButton" type="button">Music On</button>
+      <div class="status" id="statusText">Find the tears</div>
+      <div class="maze-wrap">
+        <div id="maze" class="maze" aria-label="Forest maze game board"></div>
+        <div id="bubbleLayer" class="bubble-layer" aria-hidden="true"></div>
+      </div>
+      <nav class="touch-pad" aria-label="Touch controls">
+        <button data-move="up" aria-label="Move up">▲</button>
+        <button data-move="left" aria-label="Move left">◀</button>
+        <button data-move="down" aria-label="Move down">▼</button>
+        <button data-move="right" aria-label="Move right">▶</button>
+      </nav>
+      <audio id="themeMusic" src="theme.mp3" loop preload="auto"></audio>
+    </section>
+
+    <section class="screen win-screen" data-screen="win">
+      <div class="forest-layer"></div>
+      <div class="screen-content result-content">
+        <p class="eyebrow">Moonlit Victory</p>
+        <h2>You Escaped</h2>
+        <p class="tagline" id="winText">Every glowing tear is yours.</p>
+        <div class="result-score">Score <strong id="winScore">0</strong></div>
+        <button class="primary-button" data-action="play">Play Again</button>
+      </div>
+    </section>
+
+    <section class="screen lose-screen" data-screen="lose">
+      <div class="forest-layer"></div>
+      <div class="screen-content result-content">
+        <p class="eyebrow">Game Over</p>
+        <h2>The Woods Won</h2>
+        <p class="tagline">Too much drama in the trees. Take a breath and run it back.</p>
+        <div class="result-score">Score <strong id="loseScore">0</strong></div>
+        <button class="primary-button" data-action="play">Try Again</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="game.js"></script>
+</body>
+</html>
