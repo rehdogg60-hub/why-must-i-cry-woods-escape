@@ -803,7 +803,7 @@ tear.remove();
         notesArray = [];
         powerupsArray = [];
         if(activePowerup) {
-            removePowerupVisuals();
+            playerElement.style.background = "radial-gradient(circle at 30% 30%, #ff7878, #b91c1c)";
             activePowerup = null;
         }
         if(powerupTimer) clearTimeout(powerupTimer);
