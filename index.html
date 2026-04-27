@@ -1,472 +1,783 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Why Must I Cry: Woods Escape</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Why Must I Cry: Woods Escape</title>
+    <style>
+        * {
+            user-select: none;
+            touch-action: manipulation;
+        }
 
-<style>
+        body {
+            margin: 0;
+            background: #0a0f1a;
+            color: white;
+            font-family: 'Arial Black', 'Segoe UI Black', 'Poppins', sans-serif;
+            text-align: center;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
 
-body{
-margin:0;
-background:#050505;
-color:white;
-font-family:Arial Black,Arial;
-text-align:center;
-overflow:hidden;
-}
+        #game {
+            width: 100vw;
+            height: 100vh;
+            max-width: 550px;
+            max-height: 900px;
+            margin: auto;
+            position: relative;
+            background: #010101;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
 
-#game{
-width:100vw;
-height:100vh;
-max-width:520px;
-margin:auto;
-position:relative;
-overflow:hidden;
-}
+        /* screens */
+        .screen {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+        }
 
-/* SCREENS */
+        .active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
 
-.screen{
-display:none;
-position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
-padding:20px;
-}
+        /* shared forest bg with overlay + texture */
+        .forest-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDgwMCI+PHJlY3Qgd2lkdGg9IjEyMDAiIGhlaWdodD0iODAwIiBmaWxsPSIjMTUyMjJjIi8+PHRleHQgeD0iNjAwIiB5PSI0MDAiIGZpbGw9IiMxZTNiMjAiIGZvbnQtc2l6ZT0iNjAiIGZvbnQtZmFtaWx5PSJNb25vc3BhY2UiPuKliuKliuKliuKliuKliuKliuKliuKliuKliuKliiA8L3RleHQ+PC9zdmc+') no-repeat center center;
+            background-size: cover;
+            opacity: 0.9;
+            z-index: 0;
+        }
 
-.active{
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-}
+        .forest-bg::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.7) 100%);
+            pointer-events: none;
+        }
 
-/* BACKGROUND */
+        /* start screen art (start-screen.png simulated + transparent buttons) */
+        .start-art {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: url('start-screen.png');
+            background-size: cover;
+            background-position: center 30%;
+            background-repeat: no-repeat;
+            filter: brightness(1.05) drop-shadow(0 0 8px #ff5e5e);
+            z-index: 0;
+        }
 
-.forest{
-position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
+        /* glassmorphic content */
+        .glow-panel {
+            position: relative;
+            z-index: 15;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(8px);
+            border-radius: 48px;
+            padding: 24px 28px;
+            width: 80%;
+            max-width: 380px;
+            border: 1px solid rgba(255, 50, 50, 0.6);
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5), inset 0 0 10px rgba(255,200,0,0.3);
+            transition: 0.2s;
+        }
 
-background:
-linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.75)),
-url("start-screen.png");
+        h1 {
+            font-size: 2.4rem;
+            background: linear-gradient(135deg, #ff6666, #ff1c1c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 8px #ff0000;
+            letter-spacing: 2px;
+            margin: 0;
+        }
 
-background-size:contain;
-background-position:center;
-background-repeat:no-repeat;
+        .game-sub {
+            color: #ffcc88;
+            text-shadow: 0 0 5px #ff7b2c;
+            font-size: 1rem;
+            margin-top: 6px;
+        }
 
-z-index:0;
-}
+        .transparent-btn {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #ff4d4d;
+            border-radius: 60px;
+            padding: 12px 28px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            font-family: inherit;
+            color: white;
+            text-shadow: 0 0 5px red;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            transition: 0.15s linear;
+            cursor: pointer;
+            margin-top: 20px;
+        }
 
-/* CONTENT BOX */
+        .transparent-btn:hover {
+            background: rgba(255, 60, 60, 0.5);
+            box-shadow: 0 0 25px red;
+            transform: scale(0.97);
+        }
 
-.content{
-position:relative;
-z-index:5;
-background:rgba(0,0,0,.25);
-padding:24px;
-border-radius:18px;
-box-shadow:0 0 25px red;
-width:90%;
-max-width:420px;
-}
+        /* HUD */
+        #hud {
+            display: flex;
+            justify-content: space-between;
+            background: #03030cee;
+            padding: 10px 18px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-bottom: 2px solid #ff2a2a;
+            backdrop-filter: blur(8px);
+            z-index: 20;
+            position: relative;
+        }
 
-/* TITLE */
+        #playArea {
+            position: relative;
+            height: calc(100% - 95px);
+            background: #04100f;
+            overflow: hidden;
+            background-image: radial-gradient(circle at 20% 40%, rgba(60, 90, 40, 0.3) 2%, transparent 2.5%);
+            background-size: 28px 28px;
+            cursor: none;
+        }
 
-h1{
-font-size:40px;
-color:#ff1c1c;
-text-shadow:
-0 0 10px red,
-0 0 20px red,
-2px 2px black;
-}
+        /* player - Reh Dogg character */
+        .player {
+            position: absolute;
+            width: 42px;
+            height: 42px;
+            background: radial-gradient(circle at 30% 30%, #ff7878, #b91c1c);
+            border-radius: 50% 50% 45% 45%;
+            box-shadow: 0 0 18px #ff4040, inset 0 1px 3px rgba(255,255,200,0.8);
+            transition: left 0.04s linear, top 0.04s linear;
+            z-index: 30;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: bold;
+            text-shadow: 0 0 3px black;
+        }
 
-h2{
-color:#d4af37;
-}
+        .player::after {
+            content: "🎭";
+            font-size: 28px;
+            position: absolute;
+            top: -4px;
+            left: 6px;
+            opacity: 0.9;
+        }
 
-/* BUTTON */
+        .enemy {
+            position: absolute;
+            width: 36px;
+            height: 36px;
+            background: #1f1a2e;
+            border: 2px solid #ff3a6f;
+            border-radius: 45% 55% 50% 50%;
+            box-shadow: 0 0 12px #ff3366;
+            font-size: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+        }
 
-button{
-font-size:20px;
-padding:14px 24px;
-margin-top:16px;
+        .enemy::after {
+            content: "👺";
+            font-size: 28px;
+            filter: drop-shadow(0 0 2px red);
+        }
 
-border:2px solid #ff1c1c;
-border-radius:14px;
+        .tear {
+            position: absolute;
+            font-size: 32px;
+            filter: drop-shadow(0 0 6px cyan);
+            animation: floatSoft 1.2s infinite alternate;
+            pointer-events: none;
+            z-index: 15;
+        }
 
-background:rgba(0,0,0,0.25);
-color:white;
+        .note {
+            position: absolute;
+            font-size: 34px;
+            filter: drop-shadow(0 0 5px gold);
+            animation: bounceNote 0.8s infinite alternate;
+            pointer-events: none;
+            z-index: 15;
+        }
 
-box-shadow:
-0 0 10px red,
-0 0 20px red;
+        /* power-up visuals (shower power, cry burst, maximo) */
+        .powerup-shower, .powerup-cryburst, .powerup-maximo {
+            position: absolute;
+            font-size: 32px;
+            animation: pulsePower 0.9s infinite;
+            z-index: 18;
+            pointer-events: none;
+        }
 
-cursor:pointer;
-}
+        @keyframes floatSoft {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-6px); }
+        }
 
-/* HUD */
+        @keyframes bounceNote {
+            0% { transform: scale(0.95); opacity: 0.9;}
+            100% { transform: scale(1.15); opacity: 1;}
+        }
 
-#hud{
-display:flex;
-justify-content:space-around;
-background:#111;
-padding:10px;
-font-size:18px;
-}
+        @keyframes pulsePower {
+            0% { text-shadow: 0 0 0px gold; transform: scale(1);}
+            100% { text-shadow: 0 0 16px gold; transform: scale(1.2);}
+        }
 
-/* PLAY AREA */
+        /* touch panel */
+        .touch-panel {
+            position: absolute;
+            bottom: 12px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+            padding: 10px 16px;
+            border-radius: 60px;
+            width: fit-content;
+            margin: 0 auto 12px auto;
+            z-index: 40;
+        }
 
-#playArea{
-position:relative;
-height:70vh;
-border-top:2px solid red;
-border-bottom:2px solid red;
-overflow:hidden;
-background:#050505;
-}
+        .touch-panel button {
+            width: 60px;
+            height: 60px;
+            font-size: 28px;
+            background: rgba(30,30,40,0.8);
+            border: 1px solid #ff6666;
+            border-radius: 40px;
+            color: white;
+            box-shadow: 0 0 12px rgba(255,0,0,0.6);
+            cursor: pointer;
+            transition: 0.07s linear;
+            font-weight: bold;
+        }
 
-.player{
-position:absolute;
-width:30px;
-height:30px;
-background:red;
-border-radius:50%;
-box-shadow:0 0 12px red;
-}
+        .touch-panel button:active {
+            transform: scale(0.88);
+            background: #ff4d4d;
+        }
 
-.enemy{
-position:absolute;
-width:28px;
-height:28px;
-background:black;
-border:2px solid red;
-border-radius:50%;
-}
+        #gameOverMsg {
+            font-size: 1.8rem;
+        }
 
-.tear{
-position:absolute;
-font-size:24px;
-}
-
-.note{
-position:absolute;
-font-size:24px;
-}
-
-/* TOUCH CONTROLS */
-
-.touch{
-position:absolute;
-bottom:10px;
-left:50%;
-transform:translateX(-50%);
-display:grid;
-grid-template-columns:60px 60px 60px;
-gap:8px;
-}
-
-.touch button{
-height:50px;
-font-size:22px;
-}
-
-</style>
+        @media (max-width: 560px) {
+            .glow-panel { width: 85%; padding: 16px;}
+            h1 { font-size: 1.9rem; }
+            .touch-panel button { width: 52px; height: 52px; font-size: 26px;}
+        }
+    </style>
 </head>
-
 <body>
-
 <div id="game">
+    <!-- START SCREEN with background image + transparent glow buttons -->
+    <div id="startScreen" class="screen active">
+        <div class="start-art"></div>
+        <div class="forest-bg" style="opacity:0.3;"></div>
+        <div class="glow-panel">
+            <h1>🏕️ WHY MUST I CRY</h1>
+            <div class="game-sub">🌲 WOODS ESCAPE 🌲</div>
+            <p style="margin: 12px 0; font-size:0.9rem;">💧 Collect tears & music notes 🎵<br>🚫 Avoid drama enemies 👹<br>✨ Power-ups: Shower Power, Cry Burst, Maximo Mode</p>
+            <button class="transparent-btn" id="startBtn">✨ PRESS START ✨</button>
+        </div>
+    </div>
 
-<!-- START -->
+    <!-- GAMEPLAY SCREEN -->
+    <div id="gameplayScreen" class="screen">
+        <div id="hud">
+            <span>💧 SCORE: <span id="scoreValue">0</span></span>
+            <span>❤️ LIVES: <span id="livesValue">3</span></span>
+            <span id="powerupStatus" style="font-size:0.8rem; background:#2c0a0a; padding:2px 8px; border-radius:20px;">⚡ NORMAL</span>
+        </div>
+        <div id="playArea"></div>
+        <div class="touch-panel">
+            <button data-dir="up">▲</button>
+            <button data-dir="left">◀</button>
+            <button data-dir="down">▼</button>
+            <button data-dir="right">▶</button>
+        </div>
+        <audio id="bgMusic" src="theme.mp3" loop preload="auto"></audio>
+    </div>
 
-<div id="start" class="screen active">
-
-<div class="forest"></div>
-
-<div class="content">
-
-<h1>Why Must I Cry</h1>
-<h2>Woods Escape</h2>
-
-<p>
-Run through the woods.<br>
-Collect tears.<br>
-Escape the drama.
-</p>
-
-<button onclick="startGame()">
-Start Game
-</button>
-
-</div>
-
-</div>
-
-<!-- GAME -->
-
-<div id="playing" class="screen">
-
-<div id="hud">
-
-<div>Score: <span id="score">0</span></div>
-<div>Lives: <span id="lives">3</span></div>
-
-</div>
-
-<div id="playArea"></div>
-
-<div class="touch">
-
-<button onclick="move('up')">▲</button>
-<button onclick="move('left')">◀</button>
-<button onclick="move('down')">▼</button>
-<button onclick="move('right')">▶</button>
-
-</div>
-
-<audio id="music" src="theme.mp3" loop></audio>
-
-</div>
-
-<!-- GAME OVER -->
-
-<div id="end" class="screen">
-
-<div class="forest"></div>
-
-<div class="content">
-
-<h1>Game Over</h1>
-
-<p>
-Final Score:
-<span id="final">0</span>
-</p>
-
-<button onclick="startGame()">
-Play Again
-</button>
-
-</div>
-
-</div>
-
+    <!-- GAME OVER SCREEN -->
+    <div id="gameOverScreen" class="screen">
+        <div class="start-art"></div>
+        <div class="forest-bg"></div>
+        <div class="glow-panel">
+            <h1 style="color:#ff7777;">💀 GAME OVER 💀</h1>
+            <p>🎭 Final Chaos Score: <span id="finalScoreSpan">0</span></p>
+            <p style="font-size:0.8rem;">"Why must I cry in the woods?"</p>
+            <button class="transparent-btn" id="restartBtn">🌲 TRY AGAIN 🌲</button>
+        </div>
+    </div>
 </div>
 
 <script>
-
-let player
-let score=0
-let lives=3
-let enemies=[]
-let tears=[]
-let notes=[]
-
-function show(id){
-
-document.querySelectorAll(".screen")
-.forEach(s=>s.classList.remove("active"))
-
-document.getElementById(id)
-.classList.add("active")
-
-}
-
-function startGame(){
-
-show("playing")
-
-score=0
-lives=3
-
-document.getElementById("score").innerText=score
-document.getElementById("lives").innerText=lives
-
-let area=document.getElementById("playArea")
-
-area.innerHTML=""
-
-player=document.createElement("div")
-
-player.className="player"
-
-player.style.left="200px"
-player.style.top="200px"
-
-area.appendChild(player)
-
-document.getElementById("music").play()
-
-setInterval(spawnEnemy,2000)
-setInterval(spawnTear,1500)
-setInterval(spawnNote,2500)
-
-}
-
-function move(dir){
-
-let x=player.offsetLeft
-let y=player.offsetTop
-
-if(dir==="up") y-=20
-if(dir==="down") y+=20
-if(dir==="left") x-=20
-if(dir==="right") x+=20
-
-player.style.left=x+"px"
-player.style.top=y+"px"
-
-checkCollisions()
-
-}
-
-document.addEventListener("keydown",e=>{
-
-if(e.key==="ArrowUp") move("up")
-if(e.key==="ArrowDown") move("down")
-if(e.key==="ArrowLeft") move("left")
-if(e.key==="ArrowRight") move("right")
-
-})
-
-function spawnEnemy(){
-
-let area=document.getElementById("playArea")
-
-let enemy=document.createElement("div")
-
-enemy.className="enemy"
-
-enemy.style.left=Math.random()*400+"px"
-enemy.style.top=Math.random()*400+"px"
-
-area.appendChild(enemy)
-
-enemies.push(enemy)
-
-}
-
-function spawnTear(){
-
-let area=document.getElementById("playArea")
-
-let tear=document.createElement("div")
-
-tear.className="tear"
-
-tear.innerText="💧"
-
-tear.style.left=Math.random()*400+"px"
-tear.style.top=Math.random()*400+"px"
-
-area.appendChild(tear)
-
-tears.push(tear)
-
-}
-
-function spawnNote(){
-
-let area=document.getElementById("playArea")
-
-let note=document.createElement("div")
-
-note.className="note"
-
-note.innerText="🎵"
-
-note.style.left=Math.random()*400+"px"
-note.style.top=Math.random()*400+"px"
-
-area.appendChild(note)
-
-notes.push(note)
-
-}
-
-function checkCollisions(){
-
-tears.forEach(t=>{
-
-if(collide(player,t)){
-
-score+=10
-
-document.getElementById("score").innerText=score
-
-t.remove()
-
-}
-
-})
-
-notes.forEach(n=>{
-
-if(collide(player,n)){
-
-score+=25
-
-document.getElementById("score").innerText=score
-
-n.remove()
-
-}
-
-})
-
-enemies.forEach(e=>{
-
-if(collide(player,e)){
-
-lives--
-
-document.getElementById("lives").innerText=lives
-
-e.remove()
-
-if(lives<=0){
-
-endGame()
-
-}
-
-}
-
-})
-
-}
-
-function collide(a,b){
-
-let r1=a.getBoundingClientRect()
-
-let r2=b.getBoundingClientRect()
-
-return !(
-r1.top>r2.bottom ||
-r1.bottom<r2.top ||
-r1.right<r2.left ||
-r1.left>r2.right
-)
-
-}
-
-function endGame(){
-
-document.getElementById("final").innerText=score
-
-show("end")
-
-}
-
+    // ---------- GAME STATE ----------
+    let gameActive = false;
+    let score = 0;
+    let lives = 3;
+    let playerX = 200, playerY = 200;
+    let playerElement = null;
+    let playArea = null;
+    let enemiesArray = [];
+    let tearsArray = [];
+    let notesArray = [];
+    let powerupsArray = [];   // active powerup objects (visual)
+    
+    let enemyInterval, tearInterval, noteInterval, powerupInterval, gameLoopInterval;
+    let activePowerup = null;   // { type, endTime, multiplier? }
+    let powerupTimer = null;
+    
+    // dimensions cache
+    let areaWidth = 0, areaHeight = 0;
+    
+    // powerup types
+    const POWERUP_TYPES = {
+        SHOWER: "💧💥 SHOWER POWER",   // double points from tears/notes
+        CRYBURST: "😭💢 CRY BURST",    // destroy nearby enemies
+        MAXIMO: "👑 MAXIMO MODE"       // temporary invincibility + speed (+ glow)
+    };
+    
+    // helper functions
+    function updateUI() {
+        if(!gameActive) return;
+        document.getElementById("scoreValue").innerText = score;
+        document.getElementById("livesValue").innerText = lives;
+        if(activePowerup) {
+            let secondsLeft = Math.ceil((activePowerup.endTime - Date.now()) / 1000);
+            if(secondsLeft > 0) document.getElementById("powerupStatus").innerHTML = `✨ ${activePowerup.type} ${secondsLeft}s`;
+            else document.getElementById("powerupStatus").innerHTML = `⚡ NORMAL`;
+        } else {
+            document.getElementById("powerupStatus").innerHTML = `⚡ NORMAL`;
+        }
+    }
+    
+    // collision Box
+    function collide(elemA, elemB) {
+        let r1 = elemA.getBoundingClientRect();
+        let r2 = elemB.getBoundingClientRect();
+        return !(r1.top > r2.bottom || r1.bottom < r2.top || r1.right < r2.left || r1.left > r2.right);
+    }
+    
+    // power-up effect triggers
+    function applyPowerupEffect(type) {
+        if(type === POWERUP_TYPES.CRYBURST) {
+            // destroy all enemies on screen (cry burst emotional explosion)
+            for(let i=0; i<enemiesArray.length; i++) {
+                if(enemiesArray[i] && enemiesArray[i].remove) enemiesArray[i].remove();
+            }
+            enemiesArray = [];
+            // visual feedback
+            const area = playArea;
+            const burstDiv = document.createElement("div");
+            burstDiv.style.position = "absolute";
+            burstDiv.style.left = "0";
+            burstDiv.style.top = "0";
+            burstDiv.style.width = "100%";
+            burstDiv.style.height = "100%";
+            burstDiv.style.background = "radial-gradient(circle, rgba(255,100,100,0.6), transparent)";
+            burstDiv.style.pointerEvents = "none";
+            burstDiv.style.zIndex = "100";
+            area.appendChild(burstDiv);
+            setTimeout(() => burstDiv.remove(), 400);
+        } 
+        else if(type === POWERUP_TYPES.MAXIMO) {
+            // invincibility is managed by activePowerup flag, also visual player glow
+            if(playerElement) {
+                playerElement.style.boxShadow = "0 0 26px gold, inset 0 0 12px orange";
+                playerElement.style.background = "radial-gradient(circle at 30% 30%, #f7d44a, #ff9900)";
+            }
+            setTimeout(() => {
+                if(playerElement && gameActive && activePowerup?.type === POWERUP_TYPES.MAXIMO) {
+                    // keep until powerup ends
+                }
+            }, 50);
+        }
+        else if(type === POWERUP_TYPES.SHOWER) {
+            // double points handled inside pickup, visual only
+            if(playerElement) playerElement.style.filter = "drop-shadow(0 0 6px cyan)";
+        }
+    }
+    
+    function removePowerupVisuals() {
+        if(playerElement) {
+            playerElement.style.boxShadow = "0 0 18px #ff4040, inset 0 1px 3px rgba(255,255,200,0.8)";
+            playerElement.style.background = "radial-gradient(circle at 30% 30%, #ff7878, #b91c1c)";
+            playerElement.style.filter = "";
+        }
+        document.getElementById("powerupStatus").style.background = "#2c0a0a";
+    }
+    
+    // spawn power-ups (funny emotional boosters)
+    function spawnPowerup() {
+        if(!gameActive) return;
+        const powerEmojis = ["🚿💧", "😭💢", "👑⭐"];
+        const powerTypes = [POWERUP_TYPES.SHOWER, POWERUP_TYPES.CRYBURST, POWERUP_TYPES.MAXIMO];
+        const idx = Math.floor(Math.random() * powerTypes.length);
+        const div = document.createElement("div");
+        div.className = "powerup-shower";
+        div.innerText = powerEmojis[idx];
+        div.style.left = Math.random() * (areaWidth - 50) + 20 + "px";
+        div.style.top = Math.random() * (areaHeight - 50) + 20 + "px";
+        div.dataset.type = powerTypes[idx];
+        playArea.appendChild(div);
+        powerupsArray.push(div);
+        setTimeout(() => {
+            if(div && div.remove) div.remove();
+            const idx2 = powerupsArray.indexOf(div);
+            if(idx2 !== -1) powerupsArray.splice(idx2,1);
+        }, 7000);
+    }
+    
+    // collect power-up logic
+    function checkPowerupCollision() {
+        for(let i=0; i<powerupsArray.length; i++) {
+            const p = powerupsArray[i];
+            if(p && playerElement && collide(playerElement, p)) {
+                const pType = p.dataset.type;
+                // activate power-up
+                if(activePowerup) {
+                    // clear previous active timers
+                    if(powerupTimer) clearTimeout(powerupTimer);
+                    removePowerupVisuals();
+                }
+                activePowerup = { type: pType, endTime: Date.now() + 7000 };
+                updateUI();
+                applyPowerupEffect(pType);
+                // set timer to expire powerup
+                if(powerupTimer) clearTimeout(powerupTimer);
+                powerupTimer = setTimeout(() => {
+                    if(activePowerup && activePowerup.type === pType) {
+                        activePowerup = null;
+                        removePowerupVisuals();
+                        updateUI();
+                    }
+                }, 7000);
+                p.remove();
+                powerupsArray.splice(i,1);
+                break;
+            }
+        }
+    }
+    
+    // Collision with enemies (damage only if not invincible from MAXIMO)
+    function handleEnemyCollisions() {
+        for(let i=0; i<enemiesArray.length; i++) {
+            let e = enemiesArray[i];
+            if(e && playerElement && collide(playerElement, e)) {
+                const isInvincible = (activePowerup && activePowerup.type === POWERUP_TYPES.MAXIMO);
+                if(!isInvincible) {
+                    lives--;
+                    updateUI();
+                    if(lives <= 0) {
+                        endGame();
+                        return false;
+                    }
+                }
+                // remove enemy regardless, but if invincible no life lost.
+                e.remove();
+                enemiesArray.splice(i,1);
+                i--;
+                // invincibility flash
+                if(isInvincible) {
+                    playerElement.style.opacity = "0.7";
+                    setTimeout(() => { if(playerElement) playerElement.style.opacity = "1"; }, 180);
+                } else {
+                    // Knockback effect small
+                    const currLeft = parseInt(playerElement.style.left) || playerX;
+                    const currTop = parseInt(playerElement.style.top) || playerY;
+                    playerElement.style.left = Math.max(10, Math.min(areaWidth-40, currLeft-15)) + "px";
+                    playerElement.style.top = Math.max(10, Math.min(areaHeight-40, currTop-10)) + "px";
+                    playerX = parseInt(playerElement.style.left);
+                    playerY = parseInt(playerElement.style.top);
+                }
+                break;
+            }
+        }
+        return true;
+    }
+    
+    // Collect tears & notes with potential score multiplier (shower power)
+    function collectItems() {
+        let multiplier = (activePowerup && activePowerup.type === POWERUP_TYPES.SHOWER) ? 2 : 1;
+        for(let i=0; i<tearsArray.length; i++) {
+            let tear = tearsArray[i];
+            if(tear && playerElement && collide(playerElement, tear)) {
+                let gain = 10 * multiplier;
+                score += gain;
+                tear.remove();
+                tearsArray.splice(i,1);
+                updateUI();
+                i--;
+            }
+        }
+        for(let i=0; i<notesArray.length; i++) {
+            let note = notesArray[i];
+            if(note && playerElement && collide(playerElement, note)) {
+                let gain = 25 * multiplier;
+                score += gain;
+                note.remove();
+                notesArray.splice(i,1);
+                updateUI();
+                i--;
+            }
+        }
+    }
+    
+    // move player with bounds
+    function movePlayer(dx, dy) {
+        if(!gameActive || !playerElement) return;
+        let newX = playerX + dx;
+        let newY = playerY + dy;
+        newX = Math.max(12, Math.min(areaWidth - 42, newX));
+        newY = Math.max(12, Math.min(areaHeight - 52, newY));
+        playerX = newX;
+        playerY = newY;
+        playerElement.style.left = playerX + "px";
+        playerElement.style.top = playerY + "px";
+        checkPowerupCollision();
+        collectItems();
+        let alive = handleEnemyCollisions();
+        if(!alive) return;
+        if(lives <= 0) endGame();
+    }
+    
+    function move(dir) {
+        const step = 26;
+        if(dir === "up") movePlayer(0, -step);
+        if(dir === "down") movePlayer(0, step);
+        if(dir === "left") movePlayer(-step, 0);
+        if(dir === "right") movePlayer(step, 0);
+    }
+    
+    // Spawn systems
+    function spawnEnemy() {
+        if(!gameActive) return;
+        let enemy = document.createElement("div");
+        enemy.className = "enemy";
+        let randX = Math.random() * (areaWidth - 70) + 10;
+        let randY = Math.random() * (areaHeight - 70) + 10;
+        enemy.style.left = randX + "px";
+        enemy.style.top = randY + "px";
+        playArea.appendChild(enemy);
+        enemiesArray.push(enemy);
+        // auto remove after 12 sec if stuck
+        setTimeout(() => {
+            if(enemy && enemy.remove) {
+                const idx = enemiesArray.indexOf(enemy);
+                if(idx !== -1) enemiesArray.splice(idx,1);
+                enemy.remove();
+            }
+        }, 10000);
+    }
+    
+    function spawnTear() {
+        if(!gameActive) return;
+        let tear = document.createElement("div");
+        tear.className = "tear";
+        tear.innerText = "💧";
+        tear.style.left = Math.random() * (areaWidth - 50) + 10 + "px";
+        tear.style.top = Math.random() * (areaHeight - 50) + 10 + "px";
+        playArea.appendChild(tear);
+        tearsArray.push(tear);
+        setTimeout(() => {
+            if(tear && tear.remove) {
+                const idx = tearsArray.indexOf(tear);
+                if(idx !== -1) tearsArray.splice(idx,1);
+                tear.remove();
+            }
+        }, 8000);
+    }
+    
+    function spawnNote() {
+        if(!gameActive) return;
+        let note = document.createElement("div");
+        note.className = "note";
+        note.innerText = "🎵";
+        note.style.left = Math.random() * (areaWidth - 50) + 10 + "px";
+        note.style.top = Math.random() * (areaHeight - 50) + 10 + "px";
+        playArea.appendChild(note);
+        notesArray.push(note);
+        setTimeout(() => {
+            if(note && note.remove) {
+                const idx = notesArray.indexOf(note);
+                if(idx !== -1) notesArray.splice(idx,1);
+                note.remove();
+            }
+        }, 8000);
+    }
+    
+    function clearGameIntervals() {
+        if(enemyInterval) clearInterval(enemyInterval);
+        if(tearInterval) clearInterval(tearInterval);
+        if(noteInterval) clearInterval(noteInterval);
+        if(powerupInterval) clearInterval(powerupInterval);
+        if(gameLoopInterval) clearInterval(gameLoopInterval);
+        if(powerupTimer) clearTimeout(powerupTimer);
+    }
+    
+    function endGame() {
+        if(!gameActive) return;
+        gameActive = false;
+        clearGameIntervals();
+        if(activePowerup) removePowerupVisuals();
+        document.getElementById("finalScoreSpan").innerText = score;
+        if(document.getElementById("bgMusic")) {
+            let music = document.getElementById("bgMusic");
+            music.pause();
+            music.currentTime = 0;
+        }
+        showScreen("gameOverScreen");
+    }
+    
+    function showScreen(screenId) {
+        document.querySelectorAll(".screen").forEach(scr => scr.classList.remove("active"));
+        document.getElementById(screenId).classList.add("active");
+    }
+    
+    function resetGameVariables() {
+        score = 0;
+        lives = 3;
+        enemiesArray.forEach(e => e?.remove());
+        tearsArray.forEach(t => t?.remove());
+        notesArray.forEach(n => n?.remove());
+        powerupsArray.forEach(p => p?.remove());
+        enemiesArray = [];
+        tearsArray = [];
+        notesArray = [];
+        powerupsArray = [];
+        if(activePowerup) {
+            removePowerupVisuals();
+            activePowerup = null;
+        }
+        if(powerupTimer) clearTimeout(powerupTimer);
+    }
+    
+    function startGame() {
+        if(gameActive) {
+            clearGameIntervals();
+            resetGameVariables();
+            if(playerElement) playerElement.remove();
+        }
+        gameActive = true;
+        resetGameVariables();
+        showScreen("gameplayScreen");
+        playArea = document.getElementById("playArea");
+        playArea.innerHTML = "";
+        const rect = playArea.getBoundingClientRect();
+        areaWidth = rect.width;
+        areaHeight = rect.height;
+        playerX = areaWidth/2 - 20;
+        playerY = areaHeight/2 - 20;
+        playerElement = document.createElement("div");
+        playerElement.className = "player";
+        playerElement.style.left = playerX + "px";
+        playerElement.style.top = playerY + "px";
+        playArea.appendChild(playerElement);
+        updateUI();
+        
+        // start spawn loops
+        enemyInterval = setInterval(() => spawnEnemy(), 1900);
+        tearInterval = setInterval(() => spawnTear(), 1300);
+        noteInterval = setInterval(() => spawnNote(), 1700);
+        powerupInterval = setInterval(() => spawnPowerup(), 11000);
+        gameLoopInterval = setInterval(() => {
+            if(!gameActive) return;
+            checkPowerupCollision();
+            collectItems();
+            handleEnemyCollisions();
+            if(lives <= 0) endGame();
+            updateUI();
+        }, 100);
+        
+        let musicElem = document.getElementById("bgMusic");
+        musicElem.volume = 0.5;
+        musicElem.play().catch(e => console.log("audio autoplay blocked, user interaction needed"));
+        // ensure start after click
+    }
+    
+    // Event binding
+    document.getElementById("startBtn").addEventListener("click", () => startGame());
+    document.getElementById("restartBtn").addEventListener("click", () => startGame());
+    document.querySelectorAll(".touch-panel button").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const dir = btn.getAttribute("data-dir");
+            if(dir && gameActive) move(dir);
+        });
+    });
+    window.addEventListener("keydown", (e) => {
+        if(!gameActive) return;
+        if(e.key === "ArrowUp") move("up");
+        if(e.key === "ArrowDown") move("down");
+        if(e.key === "ArrowLeft") move("left");
+        if(e.key === "ArrowRight") move("right");
+        e.preventDefault();
+    });
+    // dynamic resize recalc boundaries
+    window.addEventListener("resize", () => {
+        if(playArea && playerElement && gameActive) {
+            let rect = playArea.getBoundingClientRect();
+            areaWidth = rect.width;
+            areaHeight = rect.height;
+            playerX = Math.min(areaWidth - 42, Math.max(12, playerX));
+            playerY = Math.min(areaHeight - 52, Math.max(12, playerY));
+            playerElement.style.left = playerX + "px";
+            playerElement.style.top = playerY + "px";
+        }
+    });
+    
+    // initial dummy set
+    setTimeout(() => {
+        if(document.getElementById("playArea")) {
+            let rect = document.getElementById("playArea")?.getBoundingClientRect();
+            if(rect) { areaWidth = rect.width; areaHeight = rect.height; }
+        }
+    }, 100);
 </script>
-
 </body>
 </html>
+```
