@@ -173,30 +173,38 @@
 
         /* player - Reh Dogg character */
         .player {
-            position: absolute;
-            width: 42px;
-            height: 42px;
-            background: radial-gradient(circle at 30% 30%, #ff7878, #b91c1c);
-            border-radius: 50% 50% 45% 45%;
-            box-shadow: 0 0 18px #ff4040, inset 0 1px 3px rgba(255,255,200,0.8);
-            transition: left 0.04s linear, top 0.04s linear;
-            z-index: 30;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            font-weight: bold;
-            text-shadow: 0 0 3px black;
-        }
+position: absolute;
 
-        .player::after {
-            content: "🎭";
-            font-size: 28px;
-            position: absolute;
-            top: -4px;
-            left: 6px;
-            opacity: 0.9;
-        }
+width: 60px;
+height: 90px;
+
+background-image: url("reh-dogg.png");
+background-size: contain;
+background-repeat: no-repeat;
+background-position: center;
+
+border-radius: 0;
+
+z-index: 30;
+
+transition: left 0.04s linear, top 0.04s linear;
+}
+
+        .player {
+position: absolute;
+
+width: 60px;
+height: 95px;
+
+background-image: url("reh-dogg.png");
+background-size: contain;
+background-repeat: no-repeat;
+background-position: center;
+
+z-index: 30;
+
+transition: left 0.04s linear, top 0.04s linear;
+}
 
         .enemy {
             position: absolute;
