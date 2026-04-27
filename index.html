@@ -620,7 +620,27 @@ playerElement.classList.remove("player-hit");
         }
     }
     
-    // move player with boundsfunction spawnTearTrail() {
+    // Crying trail effect
+function spawnTearTrail() {
+    if(!playerElement || !gameActive) return;
+
+    const tear = document.createElement("div");
+    tear.className = "tear-trail";
+    tear.innerText = "💧";
+
+    tear.style.left = (playerX + 18) + "px";
+    tear.style.top = (playerY + 40) + "px";
+
+    playArea.appendChild(tear);
+
+    setTimeout(() => {
+        if(tear && tear.remove) {
+            tear.remove();
+        }
+    }, 800);
+}
+
+function movePlayer(dx, dy) {
 if(!playerElement || !gameActive) return;
 
 const tear = document.createElement("div");
