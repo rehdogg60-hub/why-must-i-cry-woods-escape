@@ -657,7 +657,31 @@
         if(gameLoopInterval) clearInterval(gameLoopInterval);
         if(powerupTimer) clearTimeout(powerupTimer);
     }
-    
+    function moveEnemiesTowardPlayer() {
+    if(!gameActive || !playerElement) return;
+
+    enemiesArray.forEach(enemy => {
+        if(!enemy) return;
+
+        let enemyX = parseFloat(enemy.style.left) || 0;
+        let enemyY = parseFloat(enemy.style.top) || 0;
+
+        let dx = playerX - enemyX;
+        let dy = playerY - enemyY;
+
+        let distance = Math.sqrt(dx * dx + dy * dy);
+
+        if(distance > 0) {
+            let speed = 1.4;
+
+            enemyX += (dx / distance) * speed;
+            enemyY += (dy / distance) * speed;
+
+            enemy.style.left = enemyX + "px";
+            enemy.style.top = enemyY + "px";
+        }
+    });
+}
     function endGame() {
         if(!gameActive) return;
         gameActive = false;
@@ -724,13 +748,18 @@
         noteInterval = setInterval(() => spawnNote(), 1700);
         powerupInterval = setInterval(() => spawnPowerup(), 11000);
         gameLoopInterval = setInterval(() => {
-            if(!gameActive) return;
-            checkPowerupCollision();
-            collectItems();
-            handleEnemyCollisions();
-            if(lives <= 0) endGame();
-            updateUI();
-        }, 100);
+    if(!gameActive) return;
+
+    moveEnemiesTowardPlayer();
+
+    checkPowerupCollision();
+    collectItems();
+    handleEnemyCollisions();
+
+    if(lives <= 0) endGame();
+
+    updateUI();
+}, 100);
         
         let musicElem = document.getElementById("bgMusic");
         musicElem.volume = 0.5;
