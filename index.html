@@ -533,7 +533,6 @@ display:block;
                 }
                 activePowerup = { type: pType, endTime: Date.now() + 7000 };
                 updateUI();
-                applyPowerupEffect(pType);
                 // set timer to expire powerup
                 if(powerupTimer) clearTimeout(powerupTimer);
                 powerupTimer = setTimeout(() => {
