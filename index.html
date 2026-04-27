@@ -1,7 +1,6 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Why Must I Cry: Woods Escape</title>
 
@@ -16,7 +15,7 @@ text-align:center;
 overflow:hidden;
 }
 
-.game-shell{
+#game{
 width:100vw;
 height:100vh;
 max-width:520px;
@@ -37,7 +36,7 @@ height:100%;
 padding:20px;
 }
 
-.screen.is-active{
+.active{
 display:flex;
 flex-direction:column;
 align-items:center;
@@ -46,7 +45,7 @@ justify-content:center;
 
 /* BACKGROUND */
 
-.forest-layer{
+.forest{
 position:absolute;
 top:0;
 left:0;
@@ -60,26 +59,27 @@ url("start-screen.png");
 background-size:contain;
 background-position:center;
 background-repeat:no-repeat;
-background-color:#050505;
 
 z-index:0;
 }
 
 /* CONTENT BOX */
 
-.screen-content{
+.content{
 position:relative;
 z-index:5;
-background:rgba(0,0,0,.35);
+background:rgba(0,0,0,.25);
 padding:24px;
 border-radius:18px;
-box-shadow:0 0 25px rgba(255,0,0,.45);
+box-shadow:0 0 25px red;
 width:90%;
 max-width:420px;
 }
 
+/* TITLE */
+
 h1{
-font-size:38px;
+font-size:40px;
 color:#ff1c1c;
 text-shadow:
 0 0 10px red,
@@ -88,31 +88,32 @@ text-shadow:
 }
 
 h2{
-font-size:28px;
 color:#d4af37;
 }
 
 /* BUTTON */
 
-.primary-button{
+button{
 font-size:20px;
 padding:14px 24px;
 margin-top:16px;
-border:0;
+
+border:2px solid #ff1c1c;
 border-radius:14px;
-background:#8a0303;
+
+background:rgba(0,0,0,0.25);
 color:white;
-box-shadow:0 0 14px red;
+
+box-shadow:
+0 0 10px red,
+0 0 20px red;
+
 cursor:pointer;
 }
 
-/* GAME AREA */
+/* HUD */
 
-.game-screen{
-padding:0;
-}
-
-.hud{
+#hud{
 display:flex;
 justify-content:space-around;
 background:#111;
@@ -120,22 +121,15 @@ padding:10px;
 font-size:18px;
 }
 
-.maze-wrap{
-position:relative;
-width:100%;
-height:65vh;
-display:flex;
-align-items:center;
-justify-content:center;
-}
+/* PLAY AREA */
 
-.maze{
-width:92%;
-height:65vh;
-background:black;
-border:2px solid red;
+#playArea{
 position:relative;
+height:70vh;
+border-top:2px solid red;
+border-bottom:2px solid red;
 overflow:hidden;
+background:#050505;
 }
 
 .player{
@@ -147,7 +141,28 @@ border-radius:50%;
 box-shadow:0 0 12px red;
 }
 
-.touch-pad{
+.enemy{
+position:absolute;
+width:28px;
+height:28px;
+background:black;
+border:2px solid red;
+border-radius:50%;
+}
+
+.tear{
+position:absolute;
+font-size:24px;
+}
+
+.note{
+position:absolute;
+font-size:24px;
+}
+
+/* TOUCH CONTROLS */
+
+.touch{
 position:absolute;
 bottom:10px;
 left:50%;
@@ -157,14 +172,9 @@ grid-template-columns:60px 60px 60px;
 gap:8px;
 }
 
-.touch-pad button{
-height:54px;
+.touch button{
+height:50px;
 font-size:22px;
-border:0;
-border-radius:12px;
-background:#8a0303;
-color:white;
-box-shadow:0 0 10px red;
 }
 
 </style>
@@ -172,157 +182,289 @@ box-shadow:0 0 10px red;
 
 <body>
 
-<main class="game-shell">
+<div id="game">
 
-<!-- START SCREEN -->
+<!-- START -->
 
-<section class="screen start-screen is-active" id="start">
+<div id="start" class="screen active">
 
-<div class="forest-layer"></div>
+<div class="forest"></div>
 
-<div class="screen-content">
+<div class="content">
 
 <h1>Why Must I Cry</h1>
 <h2>Woods Escape</h2>
 
 <p>
-Run the moonlit maze, collect glowing tears,
-and escape the woods.
+Run through the woods.<br>
+Collect tears.<br>
+Escape the drama.
 </p>
 
-<button class="primary-button"
-onclick="showScreen('instructions')">
-Start
+<button onclick="startGame()">
+Start Game
 </button>
 
 </div>
 
-</section>
-
-<!-- INSTRUCTIONS -->
-
-<section class="screen" id="instructions">
-
-<div class="forest-layer"></div>
-
-<div class="screen-content">
-
-<h2>How To Play</h2>
-
-<p>
-Use arrow keys or touch buttons to move.
-Avoid enemies and survive.
-</p>
-
-<button class="primary-button"
-onclick="startGame()">
-Enter the Woods
-</button>
-
 </div>
-
-</section>
 
 <!-- GAME -->
 
-<section class="screen game-screen" id="game">
+<div id="playing" class="screen">
 
-<header class="hud">
+<div id="hud">
 
 <div>Score: <span id="score">0</span></div>
 <div>Lives: <span id="lives">3</span></div>
 
-</header>
-
-<div class="maze-wrap">
-
-<div id="maze" class="maze"></div>
-
 </div>
 
-<nav class="touch-pad">
+<div id="playArea"></div>
+
+<div class="touch">
 
 <button onclick="move('up')">▲</button>
 <button onclick="move('left')">◀</button>
 <button onclick="move('down')">▼</button>
 <button onclick="move('right')">▶</button>
 
-</nav>
+</div>
 
-<audio id="themeMusic" src="theme.mp3" loop></audio>
+<audio id="music" src="theme.mp3" loop></audio>
 
-</section>
+</div>
 
-</main>
+<!-- GAME OVER -->
+
+<div id="end" class="screen">
+
+<div class="forest"></div>
+
+<div class="content">
+
+<h1>Game Over</h1>
+
+<p>
+Final Score:
+<span id="final">0</span>
+</p>
+
+<button onclick="startGame()">
+Play Again
+</button>
+
+</div>
+
+</div>
+
+</div>
 
 <script>
 
-let player;
-let score=0;
-let lives=3;
+let player
+let score=0
+let lives=3
+let enemies=[]
+let tears=[]
+let notes=[]
 
-function showScreen(id){
+function show(id){
 
 document.querySelectorAll(".screen")
-.forEach(s=>s.classList.remove("is-active"));
+.forEach(s=>s.classList.remove("active"))
 
 document.getElementById(id)
-.classList.add("is-active");
+.classList.add("active")
 
 }
 
 function startGame(){
 
-showScreen("game");
+show("playing")
 
-score=0;
-lives=3;
+score=0
+lives=3
 
-document.getElementById("score").innerText=score;
-document.getElementById("lives").innerText=lives;
+document.getElementById("score").innerText=score
+document.getElementById("lives").innerText=lives
 
-let maze=document.getElementById("maze");
+let area=document.getElementById("playArea")
 
-maze.innerHTML="";
+area.innerHTML=""
 
-player=document.createElement("div");
+player=document.createElement("div")
 
-player.className="player";
+player.className="player"
 
-player.style.left="200px";
-player.style.top="200px";
+player.style.left="200px"
+player.style.top="200px"
 
-maze.appendChild(player);
+area.appendChild(player)
 
-document
-.getElementById("themeMusic")
-.play();
+document.getElementById("music").play()
+
+setInterval(spawnEnemy,2000)
+setInterval(spawnTear,1500)
+setInterval(spawnNote,2500)
 
 }
 
 function move(dir){
 
-let x=player.offsetLeft;
-let y=player.offsetTop;
+let x=player.offsetLeft
+let y=player.offsetTop
 
-if(dir==="up") y-=20;
-if(dir==="down") y+=20;
-if(dir==="left") x-=20;
-if(dir==="right") x+=20;
+if(dir==="up") y-=20
+if(dir==="down") y+=20
+if(dir==="left") x-=20
+if(dir==="right") x+=20
 
-player.style.left=x+"px";
-player.style.top=y+"px";
+player.style.left=x+"px"
+player.style.top=y+"px"
+
+checkCollisions()
 
 }
 
 document.addEventListener("keydown",e=>{
 
-if(e.key==="ArrowUp") move("up");
-if(e.key==="ArrowDown") move("down");
-if(e.key==="ArrowLeft") move("left");
-if(e.key==="ArrowRight") move("right");
+if(e.key==="ArrowUp") move("up")
+if(e.key==="ArrowDown") move("down")
+if(e.key==="ArrowLeft") move("left")
+if(e.key==="ArrowRight") move("right")
 
-});
+})
+
+function spawnEnemy(){
+
+let area=document.getElementById("playArea")
+
+let enemy=document.createElement("div")
+
+enemy.className="enemy"
+
+enemy.style.left=Math.random()*400+"px"
+enemy.style.top=Math.random()*400+"px"
+
+area.appendChild(enemy)
+
+enemies.push(enemy)
+
+}
+
+function spawnTear(){
+
+let area=document.getElementById("playArea")
+
+let tear=document.createElement("div")
+
+tear.className="tear"
+
+tear.innerText="💧"
+
+tear.style.left=Math.random()*400+"px"
+tear.style.top=Math.random()*400+"px"
+
+area.appendChild(tear)
+
+tears.push(tear)
+
+}
+
+function spawnNote(){
+
+let area=document.getElementById("playArea")
+
+let note=document.createElement("div")
+
+note.className="note"
+
+note.innerText="🎵"
+
+note.style.left=Math.random()*400+"px"
+note.style.top=Math.random()*400+"px"
+
+area.appendChild(note)
+
+notes.push(note)
+
+}
+
+function checkCollisions(){
+
+tears.forEach(t=>{
+
+if(collide(player,t)){
+
+score+=10
+
+document.getElementById("score").innerText=score
+
+t.remove()
+
+}
+
+})
+
+notes.forEach(n=>{
+
+if(collide(player,n)){
+
+score+=25
+
+document.getElementById("score").innerText=score
+
+n.remove()
+
+}
+
+})
+
+enemies.forEach(e=>{
+
+if(collide(player,e)){
+
+lives--
+
+document.getElementById("lives").innerText=lives
+
+e.remove()
+
+if(lives<=0){
+
+endGame()
+
+}
+
+}
+
+})
+
+}
+
+function collide(a,b){
+
+let r1=a.getBoundingClientRect()
+
+let r2=b.getBoundingClientRect()
+
+return !(
+r1.top>r2.bottom ||
+r1.bottom<r2.top ||
+r1.right<r2.left ||
+r1.left>r2.right
+)
+
+}
+
+function endGame(){
+
+document.getElementById("final").innerText=score
+
+show("end")
+
+}
 
 </script>
 
