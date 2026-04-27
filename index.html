@@ -264,7 +264,17 @@ transition: left 0.04s linear, top 0.04s linear;
             100% { transform: scale(1.15); opacity: 1;}
         }
 
-        @keyframes pulsePower {
+        @keyframes pulsePower {@keyframes hitFlash {
+0% { transform: translateX(0); filter: brightness(1); }
+25% { transform: translateX(-6px); filter: brightness(2) hue-rotate(0deg); }
+50% { transform: translateX(6px); filter: brightness(2) hue-rotate(0deg); }
+75% { transform: translateX(-4px); filter: brightness(1.5); }
+100% { transform: translateX(0); filter: brightness(1); }
+}
+
+.player-hit {
+animation: hitFlash 0.35s ease;
+}
             0% { text-shadow: 0 0 0px gold; transform: scale(1);}
             100% { text-shadow: 0 0 16px gold; transform: scale(1.2);}
         }
@@ -531,7 +541,13 @@ display:block;
                 const isInvincible = (activePowerup && activePowerup.type === POWERUP_TYPES.MAXIMO);
                 if(!isInvincible) {
                     lives--;
-                    updateUI();
+                    updateUI();if(playerElement){
+playerElement.classList.add("player-hit");
+
+setTimeout(()=>{
+playerElement.classList.remove("player-hit");
+},350);
+}
                     if(lives <= 0) {
                         endGame();
                         return false;
