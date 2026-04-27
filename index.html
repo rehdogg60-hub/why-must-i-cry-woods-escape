@@ -735,7 +735,8 @@
         
         let musicElem = document.getElementById("bgMusic");
         musicElem.volume = 0.5;
-        musicElem.play().catch(e => console.log("audio autoplay blocked, user interaction needed"));
+        musicElem.currentTime = 0;
+musicElem.play();
         // ensure start after click
     }
     
