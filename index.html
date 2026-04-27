@@ -259,20 +259,26 @@ transition: left 0.04s linear, top 0.04s linear;
             100% { transform: translateY(-6px); }
         }
 
-        @keyframes bounceNote {
-            0% { transform: scale(0.95); opacity: 0.9;}
-            100% { transform: scale(1.15); opacity: 1;}
-        }
+       @keyframes pulsePower {
+0% { text-shadow: 0 0 0px gold; transform: scale(1); }
+100% { text-shadow: 0 0 16px gold; transform: scale(1.2); }
+}
 
-        @keyframes pulsePower {@keyframes hitFlash {@keyframes tearFall {
-0% {
-opacity: 1;
-transform: translateY(0) scale(1);
+@keyframes hitFlash {
+0% { transform: translateX(0); filter: brightness(1); }
+25% { transform: translateX(-6px); filter: brightness(2); }
+50% { transform: translateX(6px); filter: brightness(2); }
+75% { transform: translateX(-4px); filter: brightness(1.5); }
+100% { transform: translateX(0); filter: brightness(1); }
 }
-100% {
-opacity: 0;
-transform: translateY(25px) scale(0.6);
+
+.player-hit {
+animation: hitFlash 0.35s ease;
 }
+
+@keyframes tearFall {
+0% { opacity: 1; transform: translateY(0) scale(1); }
+100% { opacity: 0; transform: translateY(25px) scale(0.6); }
 }
 
 .tear-trail {
@@ -281,12 +287,6 @@ font-size: 20px;
 pointer-events: none;
 animation: tearFall 0.8s linear forwards;
 z-index: 10;
-}
-0% { transform: translateX(0); filter: brightness(1); }
-25% { transform: translateX(-6px); filter: brightness(2) hue-rotate(0deg); }
-50% { transform: translateX(6px); filter: brightness(2) hue-rotate(0deg); }
-75% { transform: translateX(-4px); filter: brightness(1.5); }
-100% { transform: translateX(0); filter: brightness(1); }
 }
 
 .player-hit {
