@@ -264,7 +264,24 @@ transition: left 0.04s linear, top 0.04s linear;
             100% { transform: scale(1.15); opacity: 1;}
         }
 
-        @keyframes pulsePower {@keyframes hitFlash {
+        @keyframes pulsePower {@keyframes hitFlash {@keyframes tearFall {
+0% {
+opacity: 1;
+transform: translateY(0) scale(1);
+}
+100% {
+opacity: 0;
+transform: translateY(25px) scale(0.6);
+}
+}
+
+.tear-trail {
+position: absolute;
+font-size: 20px;
+pointer-events: none;
+animation: tearFall 0.8s linear forwards;
+z-index: 10;
+}
 0% { transform: translateX(0); filter: brightness(1); }
 25% { transform: translateX(-6px); filter: brightness(2) hue-rotate(0deg); }
 50% { transform: translateX(6px); filter: brightness(2) hue-rotate(0deg); }
