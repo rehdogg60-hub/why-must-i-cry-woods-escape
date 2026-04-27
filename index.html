@@ -474,9 +474,8 @@ display:block;
         else if(type === POWERUP_TYPES.MAXIMO) {
             // invincibility is managed by activePowerup flag, also visual player glow
             if(playerElement) {
-                playerElement.style.boxShadow = "0 0 26px gold, inset 0 0 12px orange";
-                playerElement.style.background = "radial-gradient(circle at 30% 30%, #f7d44a, #ff9900)";
-            }
+               playerElement.style.boxShadow = "0 0 26px gold";
+               playerElement.style.filter = "drop-shadow(0 0 18px gold)";
             setTimeout(() => {
                 if(playerElement && gameActive && activePowerup?.type === POWERUP_TYPES.MAXIMO) {
                     // keep until powerup ends
@@ -809,7 +808,12 @@ tear.remove();
         notesArray = [];
         powerupsArray = [];
         if(activePowerup) {
-            playerElement.style.background = "radial-gradient(circle at 30% 30%, #ff7878, #b91c1c)";
+            playerElement.style.backgroundImage = 'url("reh-dogg.png")';
+playerElement.style.backgroundSize = "contain";
+playerElement.style.backgroundRepeat = "no-repeat";
+playerElement.style.backgroundPosition = "center";
+playerElement.style.boxShadow = "";
+playerElement.style.filter = "";
             activePowerup = null;
         }
         if(powerupTimer) clearTimeout(powerupTimer);
