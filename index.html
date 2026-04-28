@@ -152,7 +152,8 @@ music.currentTime=0;
 }
 
 showScreen("gameOverScreen");
-}
+} 
+document.getElementById("startBtn").addEventListener("click",startGame);
 document.getElementById("restartBtn").addEventListener("click",startGame);
 document.querySelectorAll(".touch-panel button").forEach(btn=>btn.addEventListener("click",e=>{e.stopPropagation();let dir=btn.getAttribute("data-dir");if(dir&&gameActive)move(dir)}));
 window.addEventListener("keydown",e=>{if(!gameActive)return;if(e.key==="ArrowUp")move("up");if(e.key==="ArrowDown")move("down");if(e.key==="ArrowLeft")move("left");if(e.key==="ArrowRight")move("right");e.preventDefault()});
