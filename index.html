@@ -147,7 +147,39 @@ function spawnEnemy(){if(!gameActive)return;let e=document.createElement("div");
 }
 function spawnTear(){if(!gameActive)return;let t=document.createElement("div");t.className="tear";t.innerText="💧";t.style.left=Math.random()*(areaWidth-50)+10+"px";t.style.top=Math.random()*(areaHeight-50)+10+"px";playArea.appendChild(t);tearsArray.push(t);setTimeout(()=>{if(t?.remove){const idx=tearsArray.indexOf(t);if(idx!==-1)tearsArray.splice(idx,1);t.remove()}},8000)}
 function spawnNote(){if(!gameActive)return;let n=document.createElement("div");n.className="note";n.innerText="🎵";n.style.left=Math.random()*(areaWidth-50)+10+"px";n.style.top=Math.random()*(areaHeight-50)+10+"px";playArea.appendChild(n);notesArray.push(n);setTimeout(()=>{if(n?.remove){const idx=notesArray.indexOf(n);if(idx!==-1)notesArray.splice(idx,1);n.remove()}},8000)}
-function moveEnemiesTowardPlayer(){if(!gameActive||!playerElement)return;enemiesArray.forEach(e=>{if(!e)return;let ex=parseFloat(e.style.left)||0,ey=parseFloat(e.style.top)||0,dx=playerX-ex,dy=playerY-ey,d=Math.sqrt(dx*dx+dy*dy);if(d>0){let speed=1.4;ex+=(dx/d)*speed;ey+=(dy/d)*speed;e.style.left=ex+"px";e.style.top=ey+"px"}})}
+function moveEnemiesTowardPlayer(){if(!gameActive||!playerElement)return;enemiesArray.forEach(e=>{if(!e)return;let ex=parseFloat(e.style.left)||0,ey=parseFloat(e.style.top)||0,dx=playerX-ex,dy=playerY-ey,d=Math.sqrt(dx*dx+dy*dy);if(d>0){let speed=1.4;ex+=(dx/d)*speed;ey+=(dy/d)*speed;e.style.left=ex+"px";e.style.top=ey+"px"}})}obstaclesArray.forEach((o,index)=>{
+
+    let ox = o.offsetLeft;
+    let oy = o.offsetTop;
+
+    if(
+        playerX < ox + 40 &&
+        playerX + 40 > ox &&
+        playerY < oy + 40 &&
+        playerY + 40 > oy
+    ){
+
+        o.remove();
+
+        obstaclesArray.splice(index,1);
+
+        if(!isInvincible){
+
+            lives--;
+
+            updateHUD();
+
+            if(lives <= 0){
+
+                endGame();
+
+            }
+
+        }
+
+    }
+
+});
 function clearGameIntervals(){if(enemyInterval)clearInterval(enemyInterval);if(tearInterval)clearInterval(tearInterval);if(noteInterval)clearInterval(noteInterval);if(powerupInterval)clearInterval(powerupInterval);if(gameLoopInterval)clearInterval(gameLoopInterval);if(powerupTimer)clearTimeout(powerupTimer)}
 function resetGameVariables(){score=0;lives=3;enemiesArray.forEach(e=>e?.remove());tearsArray.forEach(t=>t?.remove());notesArray.forEach(n=>n?.remove());powerupsArray.forEach(p=>p?.remove());enemiesArray=[];tearsArray=[];notesArray=[];powerupsArray=[];activePowerup=null;if(powerupTimer)clearTimeout(powerupTimer);restorePlayerImage()}
 function startGame(){clearGameIntervals();gameActive=true;resetGameVariables();showScreen("gameplayScreen");playArea=document.getElementById("playArea");playArea.innerHTML="";const rect=playArea.getBoundingClientRect();areaWidth=rect.width;areaHeight=rect.height;playerX=areaWidth/2-30;playerY=areaHeight/2-47;playerElement=document.createElement("div");playerElement.className="player";playerElement.style.left=playerX+"px";playerElement.style.top=playerY+"px";playArea.appendChild(playerElement);updateUI();enemyInterval=setInterval(spawnEnemy,1900);tearInterval=setInterval(spawnTear,1300);noteInterval=setInterval(spawnNote,1700);powerupInterval=setInterval(spawnPowerup,11000);gameLoopInterval=setInterval(()=>{if(!gameActive)return;moveEnemiesTowardPlayer();checkPowerupCollision();collectItems();handleEnemyCollisions();if(lives<=0)endGame();updateUI()},100);let musicElem=document.getElementById("bgMusic");musicElem.volume=.5;musicElem.currentTime=0;musicElem.play().catch(()=>{})}
