@@ -74,7 +74,23 @@ let obstaclesArray=[],obstacleInterval,enemiesArray=[],tearsArray=[],notesArray=
 let enemyInterval,tearInterval,noteInterval,powerupInterval,gameLoopInterval,activePowerup=null,powerupTimer=null,areaWidth=0,areaHeight=0;
 const POWERUP_TYPES={SHOWER:"💧💥 SHOWER POWER",CRYBURST:"😭💢 CRY BURST",MAXIMO:"👑 MAXIMO MODE"};
 function showScreen(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active")}
-function updateUI(){if(!gameActive)return;level=Math.floor(score/200)+1;enemySpeed=1.4+(level-1)*0.3;document.getElementById("scoreValue").innerText=score;document.getElementById("livesValue")document.getElementById("highScoreValue").innerText=highScore;.innerText=lives;if(activePowerup){let s=Math.ceil((activePowerup.endTime-Date.now())/1000);document.getElementById("powerupStatus").innerHTML=s>0?`✨ ${activePowerup.type} ${s}s`:"⚡ NORMAL"}else{document.getElementById("powerupStatus").innerHTML="⚡ NORMAL"}}
+function updateUI(){
+if(!gameActive)return;
+
+level=Math.floor(score/200)+1;
+enemySpeed=1.4+(level-1)*0.3;
+
+document.getElementById("scoreValue").innerText=score;
+document.getElementById("livesValue").innerText=lives;
+document.getElementById("highScoreValue").innerText=highScore;
+
+if(activePowerup){
+let s=Math.ceil((activePowerup.endTime-Date.now())/1000);
+document.getElementById("powerupStatus").innerHTML=s>0?`✨ ${activePowerup.type} ${s}s`:"⚡ NORMAL";
+}else{
+document.getElementById("powerupStatus").innerHTML="⚡ NORMAL";
+}
+}
 function collide(a,b){let r1=a.getBoundingClientRect(),r2=b.getBoundingClientRect();return !(r1.top>r2.bottom||r1.bottom<r2.top||r1.right<r2.left||r1.left>r2.right)}
 function restorePlayerImage(){if(!playerElement)return;playerElement.style.backgroundImage='url("reh-dogg.png")';playerElement.style.backgroundSize="contain";playerElement.style.backgroundRepeat="no-repeat";playerElement.style.backgroundPosition="center";playerElement.style.boxShadow="";playerElement.style.filter=""}
 function removePowerupVisuals(){restorePlayerImage();document.getElementById("powerupStatus").style.background="#2c0a0a"}
