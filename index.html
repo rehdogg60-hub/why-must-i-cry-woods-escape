@@ -48,6 +48,7 @@ h1{font-size:2.25rem;background:linear-gradient(135deg,#ff8a8a,#ff1c1c);-webkit-
 <span>💧 SCORE: <span id="scoreValue">0</span></span>
 <span>❤️ LIVES: <span id="livesValue">3</span></span>
 <span>🏆 HIGH SCORE: <span id="highScoreValue">0</span></span>
+<span>🎯 LEVEL: <span id="levelValue">1</span></span>
 <span id="powerupStatus">⚡ NORMAL</span>
 </div><div id="playArea"></div><div class="touch-panel"><button data-dir="up">▲</button><button data-dir="left">◀</button><button data-dir="down">▼</button><button data-dir="right">▶</button></div><audio id="bgMusic" src="theme.mp3" loop preload="auto"></audio></div>
 <div id="gameOverScreen" class="screen"><div class="start-art"></div><div class="glow-panel"><h1 style="color:#ff7777;">💀 GAME OVER 💀</h1><p>🎭 Final Chaos Score: <span id="finalScoreSpan">0</span></p><p style="font-size:.8rem;">"Why must I cry in the woods?"</p><button class="transparent-btn" id="restartBtn"><a href="https://ko-fi.com/rehdogg"
@@ -83,7 +84,7 @@ enemySpeed=1.4+(level-1)*0.3;
 document.getElementById("scoreValue").innerText=score;
 document.getElementById("livesValue").innerText=lives;
 document.getElementById("highScoreValue").innerText=highScore;
-document.getElementById("highScoreValue").innerText=highScore;
+document.getElementById("levelValue").innerText=level;
 if(activePowerup){
 let s=Math.ceil((activePowerup.endTime-Date.now())/1000);
 document.getElementById("powerupStatus").innerHTML=s>0?`✨ ${activePowerup.type} ${s}s`:"⚡ NORMAL";
