@@ -102,6 +102,48 @@ function spawnTearTrail(){if(!playerElement||!gameActive)return;const t=document
 function movePlayer(dx,dy){if(!gameActive||!playerElement)return;let nx=playerX+dx,ny=playerY+dy;nx=Math.max(12,Math.min(areaWidth-65,nx));ny=Math.max(12,Math.min(areaHeight-100,ny));playerX=nx;playerY=ny;playerElement.style.left=playerX+"px";playerElement.style.top=playerY+"px";spawnTearTrail();checkPowerupCollision();collectItems();if(!handleEnemyCollisions())return;if(lives<=0)endGame()}
 function move(dir){const step=26;if(dir==="up")movePlayer(0,-step);if(dir==="down")movePlayer(0,step);if(dir==="left")movePlayer(-step,0);if(dir==="right")movePlayer(step,0)}
 function spawnEnemy(){if(!gameActive)return;let e=document.createElement("div");e.className="enemy";e.style.left=Math.random()*(areaWidth-70)+10+"px";e.style.top=Math.random()*(areaHeight-70)+10+"px";playArea.appendChild(e);enemiesArray.push(e);setTimeout(()=>{if(e?.remove){const idx=enemiesArray.indexOf(e);if(idx!==-1)enemiesArray.splice(idx,1);e.remove()}},10000)}
+  function spawnObstacle(){
+
+    if(!gameActive) return;
+
+    let obstacleTypes = ["🌲","🪨","🪵"];
+
+    let o = document.createElement("div");
+
+    o.className = "obstacle";
+
+    o.textContent =
+        obstacleTypes[
+            Math.floor(Math.random() * obstacleTypes.length)
+        ];
+
+    o.style.left =
+        Math.random() * (areaWidth - 70) + 10 + "px";
+
+    o.style.top =
+        Math.random() * (areaHeight - 70) + 10 + "px";
+
+    playArea.appendChild(o);
+
+    obstaclesArray.push(o);
+
+    setTimeout(()=>{
+
+        if(o?.remove){
+
+            const idx =
+                obstaclesArray.indexOf(o);
+
+            if(idx !== -1)
+                obstaclesArray.splice(idx,1);
+
+            o.remove();
+
+        }
+
+    },10000);
+
+}
 function spawnTear(){if(!gameActive)return;let t=document.createElement("div");t.className="tear";t.innerText="💧";t.style.left=Math.random()*(areaWidth-50)+10+"px";t.style.top=Math.random()*(areaHeight-50)+10+"px";playArea.appendChild(t);tearsArray.push(t);setTimeout(()=>{if(t?.remove){const idx=tearsArray.indexOf(t);if(idx!==-1)tearsArray.splice(idx,1);t.remove()}},8000)}
 function spawnNote(){if(!gameActive)return;let n=document.createElement("div");n.className="note";n.innerText="🎵";n.style.left=Math.random()*(areaWidth-50)+10+"px";n.style.top=Math.random()*(areaHeight-50)+10+"px";playArea.appendChild(n);notesArray.push(n);setTimeout(()=>{if(n?.remove){const idx=notesArray.indexOf(n);if(idx!==-1)notesArray.splice(idx,1);n.remove()}},8000)}
 function moveEnemiesTowardPlayer(){if(!gameActive||!playerElement)return;enemiesArray.forEach(e=>{if(!e)return;let ex=parseFloat(e.style.left)||0,ey=parseFloat(e.style.top)||0,dx=playerX-ex,dy=playerY-ey,d=Math.sqrt(dx*dx+dy*dy);if(d>0){let speed=1.4;ex+=(dx/d)*speed;ey+=(dy/d)*speed;e.style.left=ex+"px";e.style.top=ey+"px"}})}
