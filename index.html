@@ -262,6 +262,40 @@ function handleObstacleCollisions(){
     }
 
 });
+function handleObstacleCollisions(){
+for(let i=0;i<obstaclesArray.length;i++){
+let o=obstaclesArray[i];
+
+if(o && playerElement && collide(playerElement,o)){
+o.remove();
+obstaclesArray.splice(i,1);
+
+const invincible =
+activePowerup &&
+activePowerup.type === POWERUP_TYPES.MAXIMO;
+
+if(!invincible){
+lives--;
+updateUI();
+
+playerElement.classList.add("player-hit");
+setTimeout(()=>{
+playerElement?.classList.remove("player-hit");
+},350);
+
+if(lives<=0){
+endGame();
+return false;
+}
+}
+
+break;
+}
+}
+
+return true;
+}
+
 function collectItems(){let m=(activePowerup&&activePowerup.type===POWERUP_TYPES.SHOWER)?2:1;for(let i=0;i<tearsArray.length;i++){let t=tearsArray[i];if(t&&playerElement&&collide(playerElement,t)){score+=10*m;t.remove();tearsArray.splice(i,1);updateUI();i--}}for(let i=0;i<notesArray.length;i++){let n=notesArray[i];if(n&&playerElement&&collide(playerElement,n)){score+=25*m;n.remove();notesArray.splice(i,1);updateUI();i--}}}
 function spawnTearTrail(){if(!playerElement||!gameActive)return;const t=document.createElement("div");t.className="tear-trail";t.innerText="💧";t.style.left=(playerX+18)+"px";t.style.top=(playerY+40)+"px";playArea.appendChild(t);setTimeout(()=>t?.remove(),800)}
 function movePlayer(dx,dy){if(!gameActive||!playerElement)return;let nx=playerX+dx,ny=playerY+dy;nx=Math.max(12,Math.min(areaWidth-65,nx));ny=Math.max(12,Math.min(areaHeight-100,ny));playerX=nx;playerY=ny;playerElement.style.left=playerX+"px";playerElement.style.top=playerY+"px";spawnTearTrail();checkPowerupCollision();collectItems();if(!handleEnemyCollisions())return;if(lives<=0)endGame()}
