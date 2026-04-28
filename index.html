@@ -156,6 +156,22 @@ function move(dir){let step=26;if(dir==="up")movePlayer(0,-step);if(dir==="down"
 function spawnEnemy(){if(!gameActive)return;let e=document.createElement("div");e.className="enemy";e.style.left=Math.random()*(areaWidth-70)+10+"px";e.style.top=Math.random()*(areaHeight-70)+10+"px";playArea.appendChild(e);enemiesArray.push(e);setTimeout(()=>{if(e?.remove){let i=enemiesArray.indexOf(e);if(i!==-1)enemiesArray.splice(i,1);e.remove()}},10000)}
 function spawnObstacle(){if(!gameActive)return;let types=["🌲","🪨","🪵"];let o=document.createElement("div");o.className="obstacle";o.textContent=types[Math.floor(Math.random()*types.length)];o.style.left=Math.random()*(areaWidth-70)+10+"px";o.style.top=Math.random()*(areaHeight-70)+10+"px";playArea.appendChild(o);obstaclesArray.push(o);setTimeout(()=>{if(o?.remove){let i=obstaclesArray.indexOf(o);if(i!==-1)obstaclesArray.splice(i,1);o.remove()}},10000)}
 function spawnTear(){if(!gameActive)return;let t=document.createElement("div");t.className="tear";t.innerText="💧";t.style.left=Math.random()*(areaWidth-50)+10+"px";t.style.top=Math.random()*(areaHeight-50)+10+"px";playArea.appendChild(t);tearsArray.push(t);setTimeout(()=>{if(t?.remove){let i=tearsArray.indexOf(t);if(i!==-1)tearsArray.splice(i,1);t.remove()}},8000)}
+function showScorePop(amount){
+if(!playerElement || !playArea) return;
+
+let pop=document.createElement("div");
+pop.className="score-pop";
+pop.innerText="+" + amount;
+
+pop.style.left=(playerX+20)+"px";
+pop.style.top=(playerY)+"px";
+
+playArea.appendChild(pop);
+
+setTimeout(()=>{
+if(pop?.remove) pop.remove();
+},800);
+}
 function spawnNote(){if(!gameActive)return;let n=document.createElement("div");n.className="note";n.innerText="🎵";n.style.left=Math.random()*(areaWidth-50)+10+"px";n.style.top=Math.random()*(areaHeight-50)+10+"px";playArea.appendChild(n);notesArray.push(n);setTimeout(()=>{if(n?.remove){let i=notesArray.indexOf(n);if(i!==-1)notesArray.splice(i,1);n.remove()}},8000)}
 function moveEnemiesTowardPlayer(){if(!gameActive||!playerElement)return;enemiesArray.forEach(e=>{if(!e)return;let ex=parseFloat(e.style.left)||0,ey=parseFloat(e.style.top)||0,dx=playerX-ex,dy=playerY-ey,d=Math.sqrt(dx*dx+dy*dy);if(d>0){ex+=(dx/d)*enemySpeed;ey+=(dy/d)*enemySpeed;e.style.left=ex+"px";e.style.top=ey+"px"}})}
 
