@@ -42,6 +42,26 @@ box-shadow: inset 0 0 120px rgba(0,0,0,0.6);
 .powerup{position:absolute;font-size:32px;animation:pulsePower .9s infinite alternate;z-index:18;pointer-events:none}
 .tear-trail{position:absolute;font-size:20px;pointer-events:none;animation:tearFall .8s linear forwards;z-index:10}
 .player-hit{animation:hitFlash .35s ease}
+.score-pop{
+position:absolute;
+color:#ffd700;
+font-weight:bold;
+font-size:18px;
+pointer-events:none;
+animation:scoreRise .8s ease forwards;
+z-index:50;
+}
+
+@keyframes scoreRise{
+0%{
+opacity:1;
+transform:translateY(0);
+}
+100%{
+opacity:0;
+transform:translateY(-25px);
+}
+}
 .touch-panel button{
 width:72px;
 height:72px;
