@@ -85,7 +85,6 @@ let obstaclesArray = [];
 let obstacleInterval;
 let enemiesArray=[],tearsArray=[],notesArray=[],powerupsArray=[];
 let enemyInterval,tearInterval,noteInterval,powerupInterval,gameLoopInterval,activePowerup=null,powerupTimer=null,areaWidth=0,areaHeight=0;
-obstacleInterval = setInterval(spawnObstacle,3000);
 const POWERUP_TYPES={SHOWER:"💧💥 SHOWER POWER",CRYBURST:"😭💢 CRY BURST",MAXIMO:"👑 MAXIMO MODE"};
 function showScreen(screenId){document.querySelectorAll(".screen").forEach(scr=>scr.classList.remove("active"));document.getElementById(screenId).classList.add("active")}
 function updateUI(){if(!gameActive)return;document.getElementById("scoreValue").innerText=score;document.getElementById("livesValue").innerText=lives;if(activePowerup){let s=Math.ceil((activePowerup.endTime-Date.now())/1000);document.getElementById("powerupStatus").innerHTML=s>0?`✨ ${activePowerup.type} ${s}s`:"⚡ NORMAL"}else document.getElementById("powerupStatus").innerHTML="⚡ NORMAL"}
@@ -96,47 +95,79 @@ function applyPowerupEffect(type){if(type===POWERUP_TYPES.CRYBURST){enemiesArray
 function spawnPowerup(){if(!gameActive)return;const emojis=["🚿💧","😭💢","👑⭐"],types=[POWERUP_TYPES.SHOWER,POWERUP_TYPES.CRYBURST,POWERUP_TYPES.MAXIMO],idx=Math.floor(Math.random()*types.length);const div=document.createElement("div");div.className="powerup";div.innerText=emojis[idx];div.style.left=Math.random()*(areaWidth-50)+20+"px";div.style.top=Math.random()*(areaHeight-50)+20+"px";div.dataset.type=types[idx];playArea.appendChild(div);powerupsArray.push(div);setTimeout(()=>{if(div?.remove){const i=powerupsArray.indexOf(div);if(i!==-1)powerupsArray.splice(i,1);div.remove()}},7000)}
 function checkPowerupCollision(){for(let i=0;i<powerupsArray.length;i++){const p=powerupsArray[i];if(p&&playerElement&&collide(playerElement,p)){const t=p.dataset.type;if(activePowerup){if(powerupTimer)clearTimeout(powerupTimer);removePowerupVisuals()}activePowerup={type:t,endTime:Date.now()+7000};updateUI();applyPowerupEffect(t);if(powerupTimer)clearTimeout(powerupTimer);powerupTimer=setTimeout(()=>{if(activePowerup&&activePowerup.type===t){activePowerup=null;removePowerupVisuals();updateUI()}},7000);p.remove();powerupsArray.splice(i,1);break}}}
 function handleEnemyCollisions(){for(let i=0;i<enemiesArray.length;i++){let e=enemiesArray[i];if(e&&playerElement&&collide(playerElement,e)){const inv=(activePowerup&&activePowerup.type===POWERUP_TYPES.MAXIMO);if(!inv){lives--;updateUI();playerElement.classList.add("player-hit");setTimeout(()=>playerElement?.classList.remove("player-hit"),350);if(lives<=0){endGame();return false}}e.remove();enemiesArray.splice(i,1);i--;if(inv){playerElement.style.opacity=".7";setTimeout(()=>{if(playerElement)playerElement.style.opacity="1"},180)}else{playerX=Math.max(10,Math.min(areaWidth-65,playerX-15));playerY=Math.max(10,Math.min(areaHeight-100,playerY-10));playerElement.style.left=playerX+"px";playerElement.style.top=playerY+"px"}break}}return true}
+obstaclesArray.forEach((o,index)=>{
+
+    let ox = o.offsetLeft;
+    let oy = o.offsetTop;
+
+    if(
+        playerX < ox + 40 &&
+        playerX + 40 > ox &&
+        playerY < oy + 40 &&
+        playerY + 40 > oy
+    ){
+
+        o.remove();
+        obstaclesArray.splice(index,1);
+
+        const invincible =
+            activePowerup &&
+            activePowerup.type === POWERUP_TYPES.MAXIMO;
+
+        if(!invincible){
+
+            lives--;
+            updateUI();
+
+            if(lives <= 0){
+                endGame();
+            }
+
+        }
+
+    }
+
+});
 function collectItems(){let m=(activePowerup&&activePowerup.type===POWERUP_TYPES.SHOWER)?2:1;for(let i=0;i<tearsArray.length;i++){let t=tearsArray[i];if(t&&playerElement&&collide(playerElement,t)){score+=10*m;t.remove();tearsArray.splice(i,1);updateUI();i--}}for(let i=0;i<notesArray.length;i++){let n=notesArray[i];if(n&&playerElement&&collide(playerElement,n)){score+=25*m;n.remove();notesArray.splice(i,1);updateUI();i--}}}
 function spawnTearTrail(){if(!playerElement||!gameActive)return;const t=document.createElement("div");t.className="tear-trail";t.innerText="💧";t.style.left=(playerX+18)+"px";t.style.top=(playerY+40)+"px";playArea.appendChild(t);setTimeout(()=>t?.remove(),800)}
 function movePlayer(dx,dy){if(!gameActive||!playerElement)return;let nx=playerX+dx,ny=playerY+dy;nx=Math.max(12,Math.min(areaWidth-65,nx));ny=Math.max(12,Math.min(areaHeight-100,ny));playerX=nx;playerY=ny;playerElement.style.left=playerX+"px";playerElement.style.top=playerY+"px";spawnTearTrail();checkPowerupCollision();collectItems();if(!handleEnemyCollisions())return;if(lives<=0)endGame()}
 function move(dir){const step=26;if(dir==="up")movePlayer(0,-step);if(dir==="down")movePlayer(0,step);if(dir==="left")movePlayer(-step,0);if(dir==="right")movePlayer(step,0)}
 function spawnEnemy(){if(!gameActive)return;let e=document.createElement("div");e.className="enemy";e.style.left=Math.random()*(areaWidth-70)+10+"px";e.style.top=Math.random()*(areaHeight-70)+10+"px";playArea.appendChild(e);enemiesArray.push(e);setTimeout(()=>{if(e?.remove){const idx=enemiesArray.indexOf(e);if(idx!==-1)enemiesArray.splice(idx,1);e.remove()}},10000)}
-  function spawnObstacle(){
+function spawnObstacle(){
 
-    if(!gameActive) return;
+if(!gameActive) return;
 
-    let obstacleTypes = ["🌲","🪨","🪵"];
+let obstacleTypes = ["🌲","🪨","🪵"];
 
-    let o = document.createElement("div");
+let o = document.createElement("div");
 
-    o.className = "obstacle";
+o.className = "obstacle";
 
-    o.textContent =
-        obstacleTypes[
-            Math.floor(Math.random() * obstacleTypes.length)
+o.textContent =
+obstacleTypes[
+Math.floor(Math.random() * obstacleTypes.length)
         ];
 
-    o.style.left =
-        Math.random() * (areaWidth - 70) + 10 + "px";
+o.style.left =
+Math.random() * (areaWidth - 70) + 10 + "px";
 
-    o.style.top =
-        Math.random() * (areaHeight - 70) + 10 + "px";
+o.style.top =
+Math.random() * (areaHeight - 70) + 10 + "px";
 
-    playArea.appendChild(o);
+playArea.appendChild(o);
 
-    obstaclesArray.push(o);
+obstaclesArray.push(o);
 
-    setTimeout(()=>{
+etTimeout(()=>{
 
-        if(o?.remove){
+if(o?.remove){
 
-            const idx =
-                obstaclesArray.indexOf(o);
+const idx =
+obstaclesArray.indexOf(o);
 
-            if(idx !== -1)
-                obstaclesArray.splice(idx,1);
-
-            o.remove();
+if(idx !== -1)
+obstaclesArray.splice(idx,1);
+  o.remove();
 
         }
 
