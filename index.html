@@ -114,7 +114,92 @@ function moveEnemiesTowardPlayer(){if(!gameActive||!playerElement)return;enemies
 
 function clearGameIntervals(){if(enemyInterval)clearInterval(enemyInterval);if(tearInterval)clearInterval(tearInterval);if(noteInterval)clearInterval(noteInterval);if(powerupInterval)clearInterval(powerupInterval);if(obstacleInterval)clearInterval(obstacleInterval);if(gameLoopInterval)clearInterval(gameLoopInterval);if(powerupTimer)clearTimeout(powerupTimer)}
 function resetGameVariables(){score=0;lives=3;enemiesArray.forEach(e=>e?.remove());tearsArray.forEach(t=>t?.remove());notesArray.forEach(n=>n?.remove());powerupsArray.forEach(p=>p?.remove());obstaclesArray.forEach(o=>o?.remove());enemiesArray=[];tearsArray=[];notesArray=[];powerupsArray=[];obstaclesArray=[];activePowerup=null;if(powerupTimer)clearTimeout(powerupTimer);restorePlayerImage()}
-function startGame(){clearGameIntervals();gameActive=true;resetGameVariables();showScreen("gameplayScreen");playArea=document.getElementById("playArea");playArea.innerHTML="";let r=playArea.getBoundingClientRect();areaWidth=r.width;areaHeight=r.height;playerX=areaWidth/2-30;playerY=areaHeight/2-47;playerElement=document.createElement("div");playerElement.className="player";playerElement.style.left=playerX+"px";playerElement.style.top=playerY+"px";playArea.appendChild(playerElement);updateUI();enemyInterval=setInterval(spawnEnemy,1900);obstacleInterval=setInterval(spawnObstacle,3000);tearInterval=setInterval(spawnTear,1300);noteInterval=setInterval(spawnNote,1700);powerupInterval=setInterval(spawnPowerup,11000);gameLoopInterval=setInterval(()=>{if(!gameActive)return;moveEnemiesTowardPlayer();checkPowerupCollision();collectItems();handleEnemyCollisions();handleObstacleCollisions();if(lives<=0)endGame();updateUI()},100);let music=document.getElementById("bgMusic");music.volume=.5;music.currentTime=0;music.play().catch(()=>{})}
+function startGame(){
+
+clearGameIntervals();
+
+gameActive=true;
+
+resetGameVariables();
+
+showScreen("gameplayScreen");
+
+playArea=document.getElementById("playArea");
+
+playArea.innerHTML="";
+
+let r=playArea.getBoundingClientRect();
+
+areaWidth=r.width;
+
+areaHeight=r.height;
+
+playerX=areaWidth/2-30;
+
+playerY=areaHeight/2-47;
+
+playerElement=document.createElement("div");
+
+playerElement.className="player";
+
+playerElement.style.left=playerX+"px";
+
+playerElement.style.top=playerY+"px";
+
+playArea.appendChild(playerElement);
+
+updateUI();
+
+/* enemies */
+enemyInterval=setInterval(spawnEnemy,1900);
+
+/* obstacles — faster + appear immediately */
+obstacleInterval=setInterval(spawnObstacle,1500);
+
+spawnObstacle();
+
+spawnObstacle();
+
+/* items */
+tearInterval=setInterval(spawnTear,1300);
+
+noteInterval=setInterval(spawnNote,1700);
+
+/* powerups */
+powerupInterval=setInterval(spawnPowerup,11000);
+
+/* main loop */
+gameLoopInterval=setInterval(()=>{
+
+if(!gameActive) return;
+
+moveEnemiesTowardPlayer();
+
+checkPowerupCollision();
+
+collectItems();
+
+handleEnemyCollisions();
+
+handleObstacleCollisions();
+
+if(lives<=0) endGame();
+
+updateUI();
+
+},100);
+
+/* music */
+
+let music=document.getElementById("bgMusic");
+
+music.volume=.5;
+
+music.currentTime=0;
+
+music.play().catch(()=>{});
+
+}
 function endGame(){if(!gameActive)return;gameActive=false;clearGameIntervals();if(activePowerup)removePowerupVisuals();document.getElementById("finalScoreSpan").innerText=score;let music=document.getElementById("bgMusic");if(music){music.pause();music.currentTime=0}showScreen("gameOverScreen")}
 
 document.getElementById("startBtn").addEventListener("click",startGame);
