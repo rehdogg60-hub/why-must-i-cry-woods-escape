@@ -130,8 +130,29 @@ flash.remove();
 },350);
 }
   function startGame(){clearGameIntervals();gameActive=true;resetGameVariables();showScreen("gameplayScreen");playArea=document.getElementById("playArea");playArea.innerHTML="";let r=playArea.getBoundingClientRect();areaWidth=r.width;areaHeight=r.height;playerX=areaWidth/2-30;playerY=areaHeight/2-47;playerElement=document.createElement("div");playerElement.className="player";playerElement.style.left=playerX+"px";playerElement.style.top=playerY+"px";playArea.appendChild(playerElement);updateUI();enemyInterval=setInterval(spawnEnemy,1900);obstacleInterval=setInterval(spawnObstacle,1500);spawnObstacle();spawnObstacle();tearInterval=setInterval(spawnTear,1300);noteInterval=setInterval(spawnNote,1700);powerupInterval=setInterval(spawnPowerup,11000);gameLoopInterval=setInterval(()=>{if(!gameActive)return;moveEnemiesTowardPlayer();checkPowerupCollision();collectItems();handleEnemyCollisions();handleObstacleCollisions();if(lives<=0)endGame();updateUI()},100);let music=document.getElementById("bgMusic");music.volume=.5;music.currentTime=0;music.play().catch(()=>{})}
-function endGame(){if(!gameActive)return;gameActive=false;clearGameIntervals();if(activePowerup)removePowerupVisuals();document.getElementById("finalScoreSpan").innerText=score;let music=document.getElementById("bgMusic");if(music){music.pause();music.currentTime=0}showScreen("gameOverScreen")}
-document.getElementById("startBtn").addEventListener("click",startGame);
+function endGame(){
+if(!gameActive)return;
+
+gameActive=false;
+clearGameIntervals();
+
+if(score > highScore){
+highScore = score;
+localStorage.setItem("wmic_high_score", highScore);
+}
+
+if(activePowerup)removePowerupVisuals();
+
+document.getElementById("finalScoreSpan").innerText=score;
+
+let music=document.getElementById("bgMusic");
+if(music){
+music.pause();
+music.currentTime=0;
+}
+
+showScreen("gameOverScreen");
+}
 document.getElementById("restartBtn").addEventListener("click",startGame);
 document.querySelectorAll(".touch-panel button").forEach(btn=>btn.addEventListener("click",e=>{e.stopPropagation();let dir=btn.getAttribute("data-dir");if(dir&&gameActive)move(dir)}));
 window.addEventListener("keydown",e=>{if(!gameActive)return;if(e.key==="ArrowUp")move("up");if(e.key==="ArrowDown")move("down");if(e.key==="ArrowLeft")move("left");if(e.key==="ArrowRight")move("right");e.preventDefault()});
