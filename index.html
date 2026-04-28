@@ -80,6 +80,7 @@ let obstaclesArray = [];
 let obstacleInterval;
 let enemiesArray=[],tearsArray=[],notesArray=[],powerupsArray=[];
 let enemyInterval,tearInterval,noteInterval,powerupInterval,gameLoopInterval,activePowerup=null,powerupTimer=null,areaWidth=0,areaHeight=0;
+obstacleInterval = setInterval(spawnObstacle,3000);
 .obstacle {
 position: absolute;
 font-size: 34px;
