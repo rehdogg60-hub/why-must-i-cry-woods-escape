@@ -42,9 +42,19 @@ box-shadow: inset 0 0 120px rgba(0,0,0,0.6);
 .powerup{position:absolute;font-size:32px;animation:pulsePower .9s infinite alternate;z-index:18;pointer-events:none}
 .tear-trail{position:absolute;font-size:20px;pointer-events:none;animation:tearFall .8s linear forwards;z-index:10}
 .player-hit{animation:hitFlash .35s ease}
-.touch-panel{position:absolute;bottom:12px;left:0;right:0;display:flex;justify-content:center;gap:12px;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);padding:10px 16px;border-radius:60px;width:fit-content;margin:0 auto 12px auto;z-index:40}
-.touch-panel button{width:56px;height:56px;font-size:26px;background:rgba(30,30,40,.85);border:1px solid #ff6666;border-radius:40px;color:white;box-shadow:0 0 12px rgba(255,0,0,.6);cursor:pointer;font-weight:bold}
-.touch-panel button:active{transform:scale(.88);background:#ff4d4d}
+.touch-panel button{
+width:72px;
+height:72px;
+font-size:30px;
+background:rgba(30,30,40,.95);
+border:2px solid #ff6666;
+border-radius:50px;
+color:white;
+box-shadow:0 0 14px rgba(255,0,0,.7);
+cursor:pointer;
+font-weight:bold;
+touch-action:manipulation;
+}
 @keyframes floatSoft{0%{transform:translateY(0)}100%{transform:translateY(-6px)}}
 @keyframes bounceNote{0%{transform:scale(.95);opacity:.9}100%{transform:scale(1.15);opacity:1}}
 @keyframes pulsePower{0%{text-shadow:0 0 0 gold;transform:scale(1)}100%{text-shadow:0 0 16px gold;transform:scale(1.2)}}
