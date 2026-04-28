@@ -95,17 +95,43 @@ function applyPowerupEffect(type){if(type===POWERUP_TYPES.CRYBURST){enemiesArray
 function spawnPowerup(){if(!gameActive)return;const emojis=["🚿💧","😭💢","👑⭐"],types=[POWERUP_TYPES.SHOWER,POWERUP_TYPES.CRYBURST,POWERUP_TYPES.MAXIMO],idx=Math.floor(Math.random()*types.length);const div=document.createElement("div");div.className="powerup";div.innerText=emojis[idx];div.style.left=Math.random()*(areaWidth-50)+20+"px";div.style.top=Math.random()*(areaHeight-50)+20+"px";div.dataset.type=types[idx];playArea.appendChild(div);powerupsArray.push(div);setTimeout(()=>{if(div?.remove){const i=powerupsArray.indexOf(div);if(i!==-1)powerupsArray.splice(i,1);div.remove()}},7000)}
 function checkPowerupCollision(){for(let i=0;i<powerupsArray.length;i++){const p=powerupsArray[i];if(p&&playerElement&&collide(playerElement,p)){const t=p.dataset.type;if(activePowerup){if(powerupTimer)clearTimeout(powerupTimer);removePowerupVisuals()}activePowerup={type:t,endTime:Date.now()+7000};updateUI();applyPowerupEffect(t);if(powerupTimer)clearTimeout(powerupTimer);powerupTimer=setTimeout(()=>{if(activePowerup&&activePowerup.type===t){activePowerup=null;removePowerupVisuals();updateUI()}},7000);p.remove();powerupsArray.splice(i,1);break}}}
 function handleEnemyCollisions(){for(let i=0;i<enemiesArray.length;i++){let e=enemiesArray[i];if(e&&playerElement&&collide(playerElement,e)){const inv=(activePowerup&&activePowerup.type===POWERUP_TYPES.MAXIMO);if(!inv){lives--;updateUI();playerElement.classList.add("player-hit");setTimeout(()=>playerElement?.classList.remove("player-hit"),350);if(lives<=0){endGame();return false}}e.remove();enemiesArray.splice(i,1);i--;if(inv){playerElement.style.opacity=".7";setTimeout(()=>{if(playerElement)playerElement.style.opacity="1"},180)}else{playerX=Math.max(10,Math.min(areaWidth-65,playerX-15));playerY=Math.max(10,Math.min(areaHeight-100,playerY-10));playerElement.style.left=playerX+"px";playerElement.style.top=playerY+"px"}break}}return true}
-obstaclesArray.forEach((o,index)=>{
+function handleObstacleCollisions(){
 
-    let ox = o.offsetLeft;
-    let oy = o.offsetTop;
+    obstaclesArray.forEach((o,index)=>{
 
-    if(
-        playerX < ox + 40 &&
-        playerX + 40 > ox &&
-        playerY < oy + 40 &&
-        playerY + 40 > oy
-    ){
+        let ox = o.offsetLeft;
+        let oy = o.offsetTop;
+
+        if(
+            playerX < ox + 40 &&
+            playerX + 40 > ox &&
+            playerY < oy + 40 &&
+            playerY + 40 > oy
+        ){
+
+            o.remove();
+            obstaclesArray.splice(index,1);
+
+            const invincible =
+                activePowerup &&
+                activePowerup.type === POWERUP_TYPES.MAXIMO;
+
+            if(!invincible){
+
+                lives--;
+                updateUI();
+
+                if(lives <= 0){
+                    endGame();
+                }
+
+            }
+
+        }
+
+    });
+
+}
 
         o.remove();
         obstaclesArray.splice(index,1);
