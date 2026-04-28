@@ -20,15 +20,13 @@ h1{font-size:2.25rem;background:linear-gradient(135deg,#ff8a8a,#ff1c1c);-webkit-
 #hud{display:flex;justify-content:space-between;align-items:center;gap:6px;background:#03030cee;padding:10px 12px;font-size:.95rem;font-weight:bold;border-bottom:2px solid #ff2a2a;position:relative;z-index:20}
 #powerupStatus{font-size:.72rem;background:#2c0a0a;padding:4px 8px;border-radius:20px;max-width:150px}
 #playArea {
-    position: relative;
-    height: calc(100% - 95px);
-
-    background-image: url("woods-ground.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-
-    box-shadow: inset 0 0 120px rgba(0,0,0,0.6);
+position: relative;
+height: calc(100% - 95px);
+background-image: url("woods-ground.png");
+background-size: cover; 
+background-position: center;
+background-repeat: no-repeat;
+box-shadow: inset 0 0 120px rgba(0,0,0,0.6);
 }
 .player{position:absolute;width:60px;height:95px;background-image:url("reh-dogg.png");background-size:contain;background-repeat:no-repeat;background-position:center;z-index:30;transition:left .04s linear,top .04s linear}
 .enemy{position:absolute;width:38px;height:38px;background:#1f1a2e;border:2px solid #ff3a6f;border-radius:45% 55% 50% 50%;box-shadow:0 0 12px #ff3366;display:flex;align-items:center;justify-content:center;z-index:20}
@@ -78,7 +76,8 @@ h1{font-size:2.25rem;background:linear-gradient(135deg,#ff8a8a,#ff1c1c);-webkit-
 </div>
 <script>
 let gameActive=false,score=0,lives=3,level=1,enemySpeed=1.4,enemySpawnRate=1900,playerX=200,playerY=200,playerElement=null,playArea=null;
-let obstacles = [];
+let obstaclesArray = [];
+let obstacleInterval;
 let enemiesArray=[],tearsArray=[],notesArray=[],powerupsArray=[];
 let enemyInterval,tearInterval,noteInterval,powerupInterval,gameLoopInterval,activePowerup=null,powerupTimer=null,areaWidth=0,areaHeight=0;
 .obstacle {
