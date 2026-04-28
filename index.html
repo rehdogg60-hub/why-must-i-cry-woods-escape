@@ -49,6 +49,7 @@ h1{font-size:2.25rem;background:linear-gradient(135deg,#ff8a8a,#ff1c1c);-webkit-
 </div>
 <script>
 let gameActive=false,score=0,lives=3,level=1,enemySpeed=1.4,enemySpawnRate=1900,playerX=200,playerY=200,playerElement=null,playArea=null;
+let lastLevel=1;
 let obstaclesArray=[],obstacleInterval,enemiesArray=[],tearsArray=[],notesArray=[],powerupsArray=[];
 let enemyInterval,tearInterval,noteInterval,powerupInterval,gameLoopInterval,activePowerup=null,powerupTimer=null,areaWidth=0,areaHeight=0;
 const POWERUP_TYPES={SHOWER:"💧💥 SHOWER POWER",CRYBURST:"😭💢 CRY BURST",MAXIMO:"👑 MAXIMO MODE"};
