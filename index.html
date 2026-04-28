@@ -44,7 +44,12 @@ h1{font-size:2.25rem;background:linear-gradient(135deg,#ff8a8a,#ff1c1c);-webkit-
 <body>
 <div id="game">
 <div id="startScreen" class="screen active"><div class="start-art"></div><div class="glow-panel"><h1>🏕️ WHY MUST I CRY</h1><div class="game-sub">🌲 WOODS ESCAPE 🌲</div><p style="margin:12px 0;font-size:.9rem;">💧 Collect tears & music notes 🎵<br>🚫 Avoid drama enemies 👹<br>✨ Power-ups: Shower Power, Cry Burst, Maximo Mode</p><button class="transparent-btn" id="startBtn">✨ PRESS START ✨</button></div></div>
-<div id="gameplayScreen" class="screen"><div id="hud"><span>💧 SCORE: <span id="scoreValue">0</span></span><span>❤️ LIVES: <span id="livesValue"><span>🏆 HIGH SCORE: <span id="highScoreValue">0</span></span>3</span></span><span id="powerupStatus">⚡ NORMAL</span></div><div id="playArea"></div><div class="touch-panel"><button data-dir="up">▲</button><button data-dir="left">◀</button><button data-dir="down">▼</button><button data-dir="right">▶</button></div><audio id="bgMusic" src="theme.mp3" loop preload="auto"></audio></div>
+<div id="gameplayScreen" class="screen"><div id="hud">
+<span>💧 SCORE: <span id="scoreValue">0</span></span>
+<span>❤️ LIVES: <span id="livesValue">3</span></span>
+<span>🏆 HIGH SCORE: <span id="highScoreValue">0</span></span>
+<span id="powerupStatus">⚡ NORMAL</span>
+</div><div id="playArea"></div><div class="touch-panel"><button data-dir="up">▲</button><button data-dir="left">◀</button><button data-dir="down">▼</button><button data-dir="right">▶</button></div><audio id="bgMusic" src="theme.mp3" loop preload="auto"></audio></div>
 <div id="gameOverScreen" class="screen"><div class="start-art"></div><div class="glow-panel"><h1 style="color:#ff7777;">💀 GAME OVER 💀</h1><p>🎭 Final Chaos Score: <span id="finalScoreSpan">0</span></p><p style="font-size:.8rem;">"Why must I cry in the woods?"</p><button class="transparent-btn" id="restartBtn"><a href="https://ko-fi.com/rehdogg"
 target="_blank"
 style="
