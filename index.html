@@ -81,6 +81,13 @@ let gameActive=false,score=0,lives=3,level=1,enemySpeed=1.4,enemySpawnRate=1900,
 let obstacles = [];
 let enemiesArray=[],tearsArray=[],notesArray=[],powerupsArray=[];
 let enemyInterval,tearInterval,noteInterval,powerupInterval,gameLoopInterval,activePowerup=null,powerupTimer=null,areaWidth=0,areaHeight=0;
+.obstacle {
+position: absolute;
+font-size: 34px;
+pointer-events: none;
+user-select: none;
+z-index: 2;
+}
 const POWERUP_TYPES={SHOWER:"💧💥 SHOWER POWER",CRYBURST:"😭💢 CRY BURST",MAXIMO:"👑 MAXIMO MODE"};
 function showScreen(screenId){document.querySelectorAll(".screen").forEach(scr=>scr.classList.remove("active"));document.getElementById(screenId).classList.add("active")}
 function updateUI(){if(!gameActive)return;document.getElementById("scoreValue").innerText=score;document.getElementById("livesValue").innerText=lives;if(activePowerup){let s=Math.ceil((activePowerup.endTime-Date.now())/1000);document.getElementById("powerupStatus").innerHTML=s>0?`✨ ${activePowerup.type} ${s}s`:"⚡ NORMAL"}else document.getElementById("powerupStatus").innerHTML="⚡ NORMAL"}
