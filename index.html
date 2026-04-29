@@ -50,6 +50,17 @@ h1{font-size:2.25rem;background:linear-gradient(135deg,#ff8a8a,#ff1c1c);-webkit-
 <span>🏆 HIGH SCORE: <span id="highScoreValue">0</span></span>
 <span>🎯 LEVEL: <span id="levelValue">1</span></span>
 <span id="powerupStatus">⚡ NORMAL</span>
+<button id="pauseBtn" style="
+background:#222;
+color:white;
+border:2px solid #ff6666;
+border-radius:12px;
+padding:4px 10px;
+font-weight:bold;
+cursor:pointer;
+">
+⏸ PAUSE
+</button>
 </div><div id="playArea"></div><div class="touch-panel"><button data-dir="up">▲</button><button data-dir="left">◀</button><button data-dir="down">▼</button><button data-dir="right">▶</button></div><audio id="bgMusic" src="theme.mp3" loop preload="auto"></audio></div>
 <div id="gameOverScreen" class="screen"><div class="start-art"></div><div class="glow-panel"><h1 style="color:#ff7777;">💀 GAME OVER 💀</h1><p>🎭 Final Chaos Score: <span id="finalScoreSpan">0</span></p><p style="font-size:.8rem;">"Why must I cry in the woods?"</p><button class="transparent-btn" id="restartBtn"><a href="https://ko-fi.com/rehdogg"
 target="_blank"
