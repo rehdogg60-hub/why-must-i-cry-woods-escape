@@ -141,6 +141,11 @@ function moveEnemiesTowardPlayer(){if(!gameActive||!playerElement)return;enemies
 function clearGameIntervals(){if(enemyInterval)clearInterval(enemyInterval);if(tearInterval)clearInterval(tearInterval);if(noteInterval)clearInterval(noteInterval);if(powerupInterval)clearInterval(powerupInterval);if(obstacleInterval)clearInterval(obstacleInterval);if(gameLoopInterval)clearInterval(gameLoopInterval);if(powerupTimer)clearTimeout(powerupTimer)}
 function resetGameVariables(){score=0;lives=3;enemiesArray.forEach(e=>e?.remove());tearsArray.forEach(t=>t?.remove());notesArray.forEach(n=>n?.remove());powerupsArray.forEach(p=>p?.remove());obstaclesArray.forEach(o=>o?.remove());enemiesArray=[];tearsArray=[];notesArray=[];powerupsArray=[];obstaclesArray=[];activePowerup=null;if(powerupTimer)clearTimeout(powerupTimer);restorePlayerImage()}
 function levelFlash(){
+let s=document.getElementById("levelUpSound");
+if(s){
+s.currentTime=0;
+s.play().catch(()=>{});
+}
 let flash=document.createElement("div");
 
 flash.style.position="absolute";
