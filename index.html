@@ -153,7 +153,49 @@ flash.remove();
   function startGame(){clearGameIntervals();gameActive=true;resetGameVariables();showScreen("gameplayScreen");playArea=document.getElementById("playArea");playArea.innerHTML="";let r=playArea.getBoundingClientRect();areaWidth=r.width;areaHeight=r.height;playerX=areaWidth/2-30;playerY=areaHeight/2-47;playerElement=document.createElement("div");playerElement.className="player";playerElement.style.left=playerX+"px";playerElement.style.top=playerY+"px";playArea.appendChild(playerElement);updateUI();enemyInterval=setInterval(spawnEnemy,1900);obstacleInterval=setInterval(spawnObstacle,1500);spawnObstacle();spawnObstacle();tearInterval=setInterval(spawnTear,1300);noteInterval=setInterval(spawnNote,1700);powerupInterval=setInterval(spawnPowerup,11000);gameLoopInterval=setInterval(()=>{if(!gameActive)return;moveEnemiesTowardPlayer();checkPowerupCollision();collectItems();handleEnemyCollisions();handleObstacleCollisions();if(lives<=0)endGame();updateUI()},100);let music=document.getElementById("bgMusic");music.volume=.5;music.currentTime=0;music.play().catch(()=>{})}
 function endGame(){
 if(!gameActive)return;
+function togglePause(){
 
+if(!gameActive)return;
+
+gamePaused=!gamePaused;
+
+let btn=document.getElementById("pauseBtn");
+
+if(gamePaused){
+
+clearGameIntervals();
+
+btn.innerText="▶ RESUME";
+
+}else{
+
+enemyInterval=setInterval(spawnEnemy,enemySpawnRate);
+obstacleInterval=setInterval(spawnObstacle,1500);
+tearInterval=setInterval(spawnTear,1300);
+noteInterval=setInterval(spawnNote,1700);
+powerupInterval=setInterval(spawnPowerup,11000);
+
+gameLoopInterval=setInterval(()=>{
+
+if(!gameActive)return;
+
+moveEnemiesTowardPlayer();
+checkPowerupCollision();
+collectItems();
+handleEnemyCollisions();
+handleObstacleCollisions();
+
+if(lives<=0)endGame();
+
+updateUI();
+
+},100);
+
+btn.innerText="⏸ PAUSE";
+
+}
+
+}
 gameActive=false;
 clearGameIntervals();
 
