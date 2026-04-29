@@ -107,6 +107,7 @@ document.getElementById("scoreValue").innerText=score;
 document.getElementById("livesValue").innerText=lives;
 document.getElementById("highScoreValue").innerText=highScore;
 document.getElementById("levelValue").innerText=level;
+document.getElementById("bestLevelValue").innerText=bestLevel;
 if(activePowerup){
 let s=Math.ceil((activePowerup.endTime-Date.now())/1000);
 document.getElementById("powerupStatus").innerHTML=s>0?`✨ ${activePowerup.type} ${s}s`:"⚡ NORMAL";
