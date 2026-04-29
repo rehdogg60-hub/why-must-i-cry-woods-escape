@@ -97,6 +97,10 @@ let newLevel=Math.floor(score/200)+1;
 if(newLevel!==lastLevel){
 level=newLevel;
 lastLevel=newLevel;
+if(level > bestLevel){
+bestLevel = level;
+localStorage.setItem("wmic_best_level", bestLevel);
+}
 levelFlash();
 }else{
 level=newLevel;
